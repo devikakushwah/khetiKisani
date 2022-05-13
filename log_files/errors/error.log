@@ -1,0 +1,11 @@
+{"level":"error","message":"login success : {\"acknowledged\":true,\"modifiedCount\":0,\"upsertedId\":null,\"upsertedCount\":0,\"matchedCount\":1}","timestamp":"Mon 25-Apr-yy 02:36:50 AM"}
+{"level":"error","message":"login success : {\"acknowledged\":true,\"modifiedCount\":0,\"upsertedId\":null,\"upsertedCount\":0,\"matchedCount\":1}","timestamp":"Mon 25-Apr-yy 02:38:19 AM"}
+{"level":"error","message":"login success : {\"acknowledged\":true,\"modifiedCount\":0,\"upsertedId\":null,\"upsertedCount\":0,\"matchedCount\":1}","timestamp":"Mon 25-Apr-yy 02:57:58 AM"}
+{"level":"error","message":"*********** view order *************{}","timestamp":"Mon 25-Apr-yy 03:22:49 AM"}
+{"level":"error","message":"*********** view order *************{}","timestamp":"Mon 25-Apr-yy 03:26:58 AM"}
+{"level":"error","message":"add cart : {\"productId\":\"62615494becd8df13230ab48\"}","timestamp":"Wed 27-Apr-yy 12:42:27 PM"}
+{"level":"error","message":"add cart : {\"productId\":\"6261fe50becd8df13230ab60\"}","timestamp":"Wed 27-Apr-yy 02:40:11 PM"}
+{"level":"error","message":"delete cart product: {\"stringValue\":\"\\\"{ _id: undefined }\\\"\",\"valueType\":\"Object\",\"kind\":\"ObjectId\",\"value\":{},\"path\":\"productList\",\"reason\":{},\"name\":\"CastError\",\"message\":\"Cast to ObjectId failed for value \\\"{ _id: undefined }\\\" (type Object) at path \\\"productList\\\"\"}","timestamp":"Wed 27-Apr-yy 04:02:05 PM"}
+{"level":"error","message":"delete cart product: {\"stringValue\":\"\\\"{ _id: undefined }\\\"\",\"valueType\":\"Object\",\"kind\":\"ObjectId\",\"value\":{},\"path\":\"productList\",\"reason\":{},\"name\":\"CastError\",\"message\":\"Cast to ObjectId failed for value \\\"{ _id: undefined }\\\" (type Object) at path \\\"productList\\\"\"}","timestamp":"Wed 27-Apr-yy 04:05:09 PM"}
+{"level":"error","message":"*********** view order *************{}","timestamp":"Fri 13-May-yy 12:04:38 PM"}
+{"level":"error","message":"*********** place order *************{}","timestamp":"Fri 13-May-yy 12:08:59 PM"}
