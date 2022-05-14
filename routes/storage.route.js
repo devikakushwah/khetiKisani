@@ -22,7 +22,8 @@ fireBase.fireBaseStorage,
     capacity: request.body.capacity,
     location: request.body.location,
     video: request.body.video,
-    image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+    storage_description: request.body.storage_description
+    ,image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
 
     duration: request.body.duration,
 })
@@ -69,6 +70,7 @@ router.put("/update-items/:sid", async(request, response) => {
     if (temperature) {
         result[0].temperature = temperature
     }
+    
     for (let i = 0; i < storage.items.length; i++) {
         if (storage.items[i]._id == request.body.id) {
             storage.items.pull({ _id: request.body.id });

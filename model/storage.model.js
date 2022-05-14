@@ -29,6 +29,9 @@ const storageSchema = new mongoose.Schema({
    duration:{
        type:String
    },
+   storage_description: {
+    type: String,
+   },
    items: [{
     name: {
         type: String,
