@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema({
     },
     total:{
         type:String,
+        required:true
     },
     address:{
         type:String,

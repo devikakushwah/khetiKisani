@@ -17,7 +17,9 @@ const contractSchema = new mongoose.Schema({
         type: String,
     
     },
-    
+    email:{
+        type: String,
+    },
     verification: {
         type: Boolean,
         default: false
