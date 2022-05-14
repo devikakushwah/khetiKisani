@@ -61,43 +61,42 @@ router.post("/place-order",auth,(request,response)=>{
             });
         
 });
-router.post("/pay",(req,res)=>{
+router.post("/pay",(request,response)=>{
+    console.log("data");
     try{
-        let reqBody = request.body;
-        printLogger(2, `*********** payment *************${JSON.stringify(reqBody)}`, 'order');
+        console.log("payment");
         instance.orders.create({
             amount: request.body.amount,
             currency: "INR"
           },(err,order)=>{
               if(err){
-                printLogger(0, `*********** payment *************${JSON.stringify(err)}`, 'order');
                   console.log(err);
-                  res.status(200).json(err);
+                  response.status(200).json(err);
               }
               else
                  console.log(order);
-                 printLogger(2, `*********** place order *************${JSON.stringify(order)}`, 'order');
-                 res.status(200).json(order);
+                 response.status(200).json(order);
           })    
         }catch(err){
-            printLogger(4, `*********** payment api *************${JSON.stringify(err)}`, 'order');
-            res.status(200).json(err);
+          console.log(err);
+            response.status(200).json(err);
         }  
     });
 
 router.post('/payment-status',(req,res)=>{
+    console.log("payment-status api");
     try{
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
-            printLogger(2, `*********** payment *************${JSON.stringify(result)}`, 'order');
+           
             res.send("payment success");
         }).catch((err) => {
             console.log(err);
-            printLogger(0, `*********** payment *************${JSON.stringify(err)}`, 'order');
+          
             res.status(404).json(err);
         });
     }catch(err){
-        printLogger(4, `*********** payment *************${JSON.stringify(err)}`, 'order');
+        
         res.status(500).json(err);
     }
     });

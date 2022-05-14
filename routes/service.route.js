@@ -22,7 +22,8 @@ var upload = multer({ storage: storage });
         travellingCharge: request.body.travellingCharge,
         description :request.body.description,
         adminDescription: request.body.adminDescription,
-       image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+       images: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" 
+       + request.file.filename + "?alt=media&token=abcddcba",
         video:request.body.video,
 
     }).then(result => {
