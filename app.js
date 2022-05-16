@@ -10,6 +10,7 @@ const storageCategoryRouter = require('./routes/storagecategory.route');
 const storageRouter  = require('./routes/storage.route');
 const bookedStorageRouter = require('./routes/storageBooked.route');
 const contractFarmingRouter = require('./routes/contract-farming.routes');
+const adminRouter = require('./routes/admin.route');
 const mongoose = require('mongoose');
 mongoose.connect("mongodb+srv://devikakushwah:Radhakrishna%4029@newcluster.7o13k.mongodb.net/khetikisani").then(result => {
     console.log("Database has been connected")
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use("/admin",adminRouter);
 app.use("/contract",contractFarmingRouter);
 app.use("/booked-storage",bookedStorageRouter);
 app.use("/storage", storageRouter);

@@ -54,7 +54,7 @@ router.get('/view-booked',  (request, response) => {
 });
 router.get('/view-booked/:uid',(request, response)=>{
     try{
-        StorageBooked.find({userId:request.params.uid}).then(result => {
+        StorageBooked.find({userId:request.params.uid}).populate("items").then(result => {
             console.log(result);
             printLogger(2, `*********** view order *************${JSON.stringify(result)}`, 'order');
             response.status(200).json(result);
