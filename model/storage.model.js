@@ -37,13 +37,16 @@ const storageSchema = new mongoose.Schema({
         type: String,
     },
     charges: {
-        type: String,
+        type: Number,
     },
     description: {
         type: String,
     },
     temperature:{
         type: String,
+    },
+    weight:{
+        type:Number
     }
    }],
   

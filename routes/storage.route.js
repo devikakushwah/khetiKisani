@@ -40,7 +40,8 @@ router.post("/add-items", async(request, response) => {
         name: request.body.name,
         charges: request.body.charges,
         description: request.body.description,
-        temperature:request.body.temperature
+        temperature:request.body.temperature,
+        weight:request.body.weight,
     }
     let storage = await Storage.findOne({ _id: request.body.sid });
     console.log(storage);
@@ -57,7 +58,7 @@ router.put("/update-items/:sid", async(request, response) => {
     var result = storage.items.filter(obj => {
         return obj._id == (request.body.item_id)
     })
-    const { charges, name, description,temperature } = request.body;
+    const { charges, name, description,temperature ,weight} = request.body;
     if (name) {
         result[0].name = name
     }
@@ -70,12 +71,14 @@ router.put("/update-items/:sid", async(request, response) => {
     if (temperature) {
         result[0].temperature = temperature
     }
-    
+    if (weight) {
+        result[0].weight = weight
+    }
     for (let i = 0; i < storage.items.length; i++) {
         if (storage.items[i]._id == request.body.id) {
             storage.items.pull({ _id: request.body.id });
             storage.items.push({ name: result[0].name, charges: result[0].charges, temperature:result[0].temperature,
-                description: result[0].description, _id: result[0]._id })
+                description: result[0].description, _id: result[0]._id ,weight:result[0].weight })
         }
     }
     storage.save().then((result) => {

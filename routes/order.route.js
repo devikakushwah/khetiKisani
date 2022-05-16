@@ -85,18 +85,19 @@ router.post("/pay",(request,response)=>{
 
 router.post('/payment-status',(req,res)=>{
     console.log("payment-status api");
+    console.log(req.body.razorpay_payment_id)
     try{
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
            
-            res.send("payment success");
+            res.status(200).json(result);
         }).catch((err) => {
             console.log(err);
           
             res.status(404).json(err);
         });
     }catch(err){
-        
+        console.log(err);
         res.status(500).json(err);
     }
     });
