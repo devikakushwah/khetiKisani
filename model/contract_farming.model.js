@@ -2,6 +2,10 @@ const { booleanParser } = require('config/parser');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const contractSchema = new mongoose.Schema({
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"customers"
+    },
     name: {
         type: String,
     
@@ -34,6 +38,15 @@ const contractSchema = new mongoose.Schema({
     description: {
         type: String,
     },
+    reviews: [{
+     user: {
+         type:mongoose.Schema.Types.ObjectId,
+         ref:"customers"
+     },
+     feedback: {
+         type: String
+     }
+    }],
     date: {
         type: Date,
         default: Date.now

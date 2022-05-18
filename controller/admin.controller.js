@@ -73,7 +73,7 @@ exports.adminSignIn =async(request, response, next) => {
                     console.log(err);
                 }
                 console.log(token);
-                response.status(200).json( {token:token , user: user});
+                response.status(200).json(token);
             }
         );
     } catch (err) {

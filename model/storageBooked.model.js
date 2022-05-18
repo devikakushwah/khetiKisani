@@ -18,9 +18,7 @@ const querySchema = new mongoose.Schema({
     payment:{type:Boolean,
         default:false
       },
-     duration:{
-          type:String
-      },
+     
       isEmpty:{
           type:Boolean,
           default:true
@@ -35,6 +33,12 @@ const querySchema = new mongoose.Schema({
             type:String,
         },
         weight:{
+            type:String,
+        },
+        bookingDate:{
+            type:Date
+        },
+        duration:{
             type:String,
         }
     }]

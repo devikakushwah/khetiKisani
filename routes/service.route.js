@@ -74,6 +74,23 @@ fireBase.fireBaseStorage,
         console.log(err);
         return response.status(500).json({ err: "server err.." })
     });
-})
+});
+router.post('/review/:sid',async (request,response)=>{
+    const reviews = {
+        user: request.body.id,
+        feedback: request.body.feedback,
+    }
+    let service = await Service.findOne({ _id: request.params.sid });
+    console.log("storage  "+ storage);
+    service.reviews.push(reviews);
+    service.save().then(result => {
+        console.log(result);
+        return response.status(200).json(result)
+    }).catch(
+        err => {
+            console.log(err);
+            return response.status(500).json(err);
+        })
 
+})
 module.exports = router;

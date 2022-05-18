@@ -3,13 +3,25 @@ const { validator, validationResult } = require('express-validator');
 const User = require('../model/customer.model');
 const jwt = require('jsonwebtoken');
 const fast2sms = require('fast-two-sms');
-
+const gravatar = require("gravatar");
 const nodemailer = require('nodemailer');
 const config = require('config');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const { printLogger } = require('../core/utility');
 const { query } = require('express');
+const multer = require('multer');
+const fireBase = require("../middleware/firebase");
+
+
+var storage = multer.diskStorage({
+    destination: 'public/images',
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+var upload = multer({ storage: storage });
+
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -23,16 +35,26 @@ router.post('/signup',async (request, response) => {
     
         const errors = validationResult(request);
         if (!errors.isEmpty())
+        {
+            console.log(errors);
             return response.status(400).json({ errors: errors.array() });
-        const { name, email, password, mobile, occupation, address } = request.body;
+        }
+        const { name, email, password, mobile, occupation, address,} = request.body;
         try {
             let user = await User.findOne({ email });
             if (user) {
+                console.log("already exists");
                 return response.status(400).json({ msg: "already exists" })
             }
             user = new User({ name, email, mobile, password, occupation, address });
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(password, salt);
+            const image = gravatar.url(email,{
+                s:'200',
+                r:'pg',
+                 d:'mm'
+               });
+               user.image = image;
             user.save().then(result => {
                 console.log(result);
     
@@ -139,5 +161,45 @@ router.get('/view/:id',(request,response)=>{
         console.log(err);
         return response.status(500).json(err);
     })
+ });
+ router.post('/edit-profile/:id', async (request,response)=>{
+ const user =  await  User.findOne({_id:request.params.id});
+  if(!user){
+    return response.status(500).json({msg:"User does not exists"});
+
+  }
+  const {name, email,address,mobile} = request.body;
+  
+    User.updateOne(
+        { _id: request.params.id },
+        {
+          $set: {
+            name: request.body.name,
+            email: request.body.email,
+            address: request.body.address,
+            mobile: request.body.mobile,
+        
+          }
+        }
+      )
+        .then((result) => {
+          console.log(result);
+          printLogger(2,`login success : ${JSON.stringify(result)}`);
+          if (result.modifiedCount) {
+            printLogger(2,`login success : ${JSON.stringify(result.modifiedCount)}`);
+                return response.status(200).json(result);
+          
+          }
+          else{
+            printLogger(0,`login success : ${JSON.stringify(result)}`);
+            return response.status(200).json(result.modifiedCount);
+          }
+        })
+        .catch((err) => {
+          printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
+          return response.status(404).json(err);
+        });
+    
  })
+
 module.exports = router;

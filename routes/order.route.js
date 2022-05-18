@@ -90,7 +90,7 @@ router.post('/payment-status',(req,res)=>{
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
            
-            res.status(200).json(result);
+            res.status(200).json({msg:"success"});
         }).catch((err) => {
             console.log(err);
           

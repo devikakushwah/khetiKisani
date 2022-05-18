@@ -10,11 +10,19 @@ const customerSchema = mongoose.Schema({
     address:{
         type:String
     },
+ 
     email:{
-        type:String
+        type:String,
+        unique:true
     },
     password:{
         type:String
+    },
+    occupation:{
+        type:String
+    },
+    image:{
+       type:String
     },
     date:{
         type:Date,

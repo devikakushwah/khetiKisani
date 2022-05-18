@@ -42,6 +42,9 @@ router.post("/add-items", async(request, response) => {
         description: request.body.description,
         temperature:request.body.temperature,
         weight:request.body.weight,
+        bookingDate: request.body.bookingDate,
+        durationNo: request.body.durationNo,
+        durationDay: request.body.durationDay
     }
     let storage = await Storage.findOne({ _id: request.body.sid });
     console.log(storage);
@@ -102,7 +105,9 @@ router.delete("/delete-items/:item_id/:sid",async(request, response) => {
         })
 })
 router.get("/view-storage/:sid",(request,response)=>{
-    Storage.findOne({_id:request.params.sid}).then(result=>{
+    console.log(request.params.sid);
+    Storage.find({storageId:request.params.sid}).then(result=>{
+        console.log(result);
         return response.status(200).json(result)
     }).catch(
         err => {
@@ -116,5 +121,22 @@ router.get("/view-storage",(request,response)=>{
         err => {
             return response.status(500).json(err);
         })
+});
+router.post('/review/:sid',async (request,response)=>{
+    const reviews = {
+        user: request.body.id,
+        feedback: request.body.feedback,
+    }
+    let storage = await Storage.findOne({ _id: request.params.sid });
+    console.log("storage  "+ storage);
+    storage.reviews.push(reviews);
+    storage.save().then(result => {
+        console.log(result);
+        return response.status(200).json(result)
+    }).catch(
+        err => {
+            return response.status(500).json(err);
+        })
+
 })
 module.exports = router;

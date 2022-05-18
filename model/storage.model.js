@@ -13,8 +13,7 @@ const storageSchema = new mongoose.Schema({
    },
    
    isAvailable: {
-    type: Boolean,
-    default: true
+    type: Boolean
 
    },
    image:{
@@ -47,7 +46,14 @@ const storageSchema = new mongoose.Schema({
     },
     weight:{
         type:Number
+    },
+    durationNo:{
+        type:Number
+    },
+    durationDay:{
+        type:String
     }
+
    }],
   
    reviews: [{

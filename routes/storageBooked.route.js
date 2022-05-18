@@ -6,16 +6,18 @@ const {printLogger} = require('../core/utility');
 router.post('/add/:uid/:sid',async (request, response) => {
 try{
    
-const { payment,duration, mobile, total } = request.body;
+const { payment,mobile, total } = request.body;
 const userId = request.params.uid;
 const storage_id = request.params.sid;
-const storageItem = { userId,storage_id,payment,duration, mobile, total};
+const storageItem = { userId,storage_id,payment,mobile, total};
 console.log(request.body.items.length);
 var storageBooked = new StorageBooked(storageItem);
 for (i = 0; i < request.body.items.length; i++) {
     var name = request.body.items[i].name;
     var weight = request.body.items[i].weight;
-    storageBooked.items.push({ name:name,weight:weight });
+    var duration = request.body.items[i].duration;
+    var bookingDate = request.body.items[i].bookingDate;
+    storageBooked.items.push({ name:name,weight:weight,duration:duration,bookingDate:bookingDate });
 }
 
 
