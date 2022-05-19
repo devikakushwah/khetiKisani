@@ -37,7 +37,7 @@ router.post('/signup',async (request, response) => {
         if (!errors.isEmpty())
         {
             console.log(errors);
-            return response.status(400).json({ errors: errors.array() });
+            return response.status(400).json({ msg:"validation error" });
         }
         const { name, email, password, mobile, occupation, address,} = request.body;
         try {
@@ -87,7 +87,7 @@ router.post('/signup',async (request, response) => {
             }).catch(err => {
                 console.log(err);
                 printLogger(0, `*********** signup *************${JSON.stringify(err)}`, 'signup');
-                return response.status(404).json({ msg: 'not saved' });
+                return response.status(500).json({ msg: 'not saved' });
             })
         } catch (err) {
             console.log(err);
@@ -95,6 +95,7 @@ router.post('/signup',async (request, response) => {
             return response.status(500).json({ msg: 'error find...' });
         }
 });
+
 
 router.post("/signin",async(request, response) => {
     const errors = validationResult(request);
@@ -114,7 +115,7 @@ router.post("/signin",async(request, response) => {
         if (!isMatch) {
             console.log("invalid password");
             return response
-                .status(400)
+                .status(404)
                 .json({ errors: [{ msg: 'Invalid Password' }] });
         }
 
@@ -144,6 +145,46 @@ router.post("/signin",async(request, response) => {
 
 });
 
+router.post("/googleSignin",async(request, response) => {
+
+    const { email } = request.body;
+
+    try {
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            console.log("user not exists");
+            return response
+                .status(400)
+                .json({ errors: [{ msg: 'Invalid Credentials' }] });
+        }
+        
+
+        const payload = {
+            user: {
+                id: user._id,
+                email:user.email
+            }
+        };
+        console.log(payload);
+
+        jwt.sign(
+            payload,
+            config.get('jwtSecret'), { expiresIn: '5 days' },
+            (err, token) => {
+                if (err){
+                    console.log(err);
+                }
+                console.log(token);
+                response.status(200).json( {token:token , user: user});
+            }
+        );
+    } catch (err) {
+        console.error(err.message);
+        response.status(500).json({msg:'Server error'});
+    }
+
+});
 router.get('/view/:id',(request,response)=>{
     User.findOne({_id:request.params.id}).then(result=>{
         console.log(result);

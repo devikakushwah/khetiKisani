@@ -18,8 +18,8 @@ var transporter = nodemailer.createTransport({
 router.post("/place-order",auth,(request,response)=>{
     const { userId,total,address,mobile,shipping,payment,duration} = request.body;
       const orderItem = {userId,total,address,mobile,shipping,payment,duration}
-    var order = new Order(orderItem);
-        for (i = 0; i < request.body.orderList.length; i++) {
+    var order= new Order(orderItem);
+        for(let i=0; i <request.body.orderList.length;i++) {
             var tool_id = request.body.orderList[i].tool_id;
             var bookingDate = request.body.orderList[i].bookingDate;
             order.orderList.push({ tool_id:tool_id, bookingDate:bookingDate});

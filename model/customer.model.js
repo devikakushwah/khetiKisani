@@ -10,7 +10,9 @@ const customerSchema = mongoose.Schema({
     address:{
         type:String
     },
- 
+    provider:{
+        type:String
+    },
     email:{
         type:String,
         unique:true
