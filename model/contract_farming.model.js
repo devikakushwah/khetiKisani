@@ -23,6 +23,7 @@ const contractSchema = new mongoose.Schema({
     },
     email:{
         type: String,
+        required:true
     },
     verification: {
         type: Boolean,
@@ -37,6 +38,7 @@ const contractSchema = new mongoose.Schema({
     },
     description: {
         type: String,
+        required:true
     },
     reviews: [{
      user: {
