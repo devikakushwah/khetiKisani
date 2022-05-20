@@ -12,8 +12,8 @@ const { printLogger } = require('../core/utility');
 const { query } = require('express');
 const multer = require('multer');
 const fireBase = require("../middleware/firebase");
-
-
+const Service = require("../model/service.model");
+const Storage = require('../model/storage.model');
 var storage = multer.diskStorage({
     destination: 'public/images',
     filename: function(req, file, cb) {
@@ -242,5 +242,15 @@ router.get('/view/:id',(request,response)=>{
         });
     
  })
+router.get("/search",(request,response)=>{
+   Service.find().then(result=>{
+       Storage.find().then(data=>{
+           return response.status(200).json({service:result,storage:data})
+       }).catch(err=>{
+ return response.status(500).json(err);
+       })
+   }).catch(err=>{
 
+   })
+})
 module.exports = router;
