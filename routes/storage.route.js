@@ -113,6 +113,16 @@ router.get("/view-storage/:sid",(request,response)=>{
         err => {
             return response.status(500).json(err);
         })
+});
+router.get("/view/:sid",(request,response)=>{
+    console.log(request.params.sid);
+    Storage.find({_id:request.params.sid}).populate("storageId").then(result=>{
+        console.log(result);
+        return response.status(200).json(result)
+    }).catch(
+        err => {
+            return response.status(500).json(err);
+        })
 })
 router.get("/view-storage",(request,response)=>{
     Storage.find().then(result=>{

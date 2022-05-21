@@ -104,12 +104,13 @@ router.post('/payment-status',(req,res)=>{
 
 router.get('/view-order',  (request, response) => {
     try{
-    Order.find().populate("orderList.tool_id").then(result => {
+    Order.find().populate("orderList.tool_id").populate("userId").then(result => {
         console.log(result);
        
         response.status(200).json(result);
      }).catch(err => {
          console.log(err);
+
         
         return response.status(404).json({ err: 'Server error' });
     })
