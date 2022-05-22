@@ -241,11 +241,30 @@ router.get('/view/:id',(request,response)=>{
           return response.status(404).json(err);
         });
     
- })
+ });
+ var dbcourse = [];
+
 router.get("/search",(request,response)=>{
    Service.find().then(result=>{
+       for(var i=0;i<result.length;i++){
+           dbcourse.push(result[i]);
+       }
+    // result.map((d, k) => {
+    //     dbcourse.push(d._id);
+    // })
+
        Storage.find().then(data=>{
-           return response.status(200).json({service:result,storage:data})
+           console.log(dbcourse.length);
+           console.log(data.length);
+           var length = dbcourse.length + data.length;
+           console.log(length);
+           dbcourse.push(data);
+        //   for(var i=dbcourse.length;i<=length;i++){
+        //       console.log("data"+data[i])
+        //       dbcourse.push(data[i]);
+        //   }
+          console.log(dbcourse);
+           return response.status(200).json(dbcourse);
        }).catch(err=>{
  return response.status(500).json(err);
        })
@@ -253,4 +272,5 @@ router.get("/search",(request,response)=>{
 
    })
 })
+
 module.exports = router;
