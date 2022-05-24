@@ -16,7 +16,7 @@ const storageSchema = new mongoose.Schema({
     type: Boolean
 
    },
-   image:{
+   images:{
     type:String,
    },
    video:{

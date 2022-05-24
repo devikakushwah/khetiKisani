@@ -204,47 +204,80 @@ router.get('/view/:id',(request,response)=>{
     })
  });
  router.post('/edit-profile/:id', async (request,response)=>{
- const user =  await  User.findOne({_id:request.params.id});
-  if(!user){
-    return response.status(500).json({msg:"User does not exists"});
-
-  }
+ 
   const {name, email,address,mobile} = request.body;
-  
-    User.updateOne(
-        { _id: request.params.id },
+     var profile={};
+     if(name)
+     profile.name = name;
+     if(email){
+         profile.email = email;
+     }
+     if(address){
+         profile.address = address;
+     }
+     if(mobile){
+         profile.mobile = mobile;
+     }
+     try{
+        let objectProfile = await  User.findOne({_id:request.params.id});
+        if(objectProfile)
         {
-          $set: {
-            name: request.body.name,
-            email: request.body.email,
-            address: request.body.address,
-            mobile: request.body.mobile,
-        
-          }
-        }
-      )
-        .then((result) => {
-          console.log(result);
-          printLogger(2,`login success : ${JSON.stringify(result)}`);
-          if (result.modifiedCount) {
-            printLogger(2,`login success : ${JSON.stringify(result.modifiedCount)}`);
-                return response.status(200).json(result);
+          objectProfile = await User.findOneAndUpdate({_id:request.params.id},{$set:profile},{new:true});
+          return response.status(200).json(objectProfile);
+        } 
+     }catch(error){
+      return response.status(500).json({error:error.array});
+    }
+
+    // User.updateOne(
+    //     { _id: request.params.id },
+    //     {
+    //       $set: {
+           
+    //       }
+    //     }
+    //   )
+    //     .then((result) => {
+    //       console.log(result);
+    //       printLogger(2,`login success : ${JSON.stringify(result)}`);
+    //       if (result.modifiedCount) {
+    //         printLogger(2,`login success : ${JSON.stringify(result.modifiedCount)}`);
+    //             return response.status(200).json(result);
           
-          }
-          else{
-            printLogger(0,`login success : ${JSON.stringify(result)}`);
-            return response.status(200).json(result.modifiedCount);
-          }
-        })
-        .catch((err) => {
-          printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
-          return response.status(404).json(err);
-        });
+    //       }
+    //       else{
+    //         printLogger(0,`login success : ${JSON.stringify(result)}`);
+    //         return response.status(200).json(result.modifiedCount);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
+    //       return response.status(404).json(err);
+    //     });
     
  });
- var dbcourse = [];
-
+ 
+router.post("/search-product",async (request, response) => {
+    try{
+    var regex = new RegExp(request.body.text, "i");
+    console.log(regex);
+    {$or: [{branch: "ECE"},
+                     {joiningYear: 2017}]}
+     var result = await  Service.find({$or: [{name: regex},
+     {description: regex}]})
+    var data = await Storage.find({$or: [{name: regex},
+    {storage_description: regex}]}).populate("items");
+    console.log(result);
+    console.log(data);
+    return response.status(200).json({service:result,storage:data});
+    }catch(err){
+        console.log(err);
+        return response.status(500).json({ message: "Something went wrong" });
+    }
+});
+    
 router.get("/search",(request,response)=>{
+    var dbcourse = [];
    Service.find().then(result=>{
        for(var i=0;i<result.length;i++){
            dbcourse.push(result[i]);
@@ -253,24 +286,20 @@ router.get("/search",(request,response)=>{
     //     dbcourse.push(d._id);
     // })
 
-       Storage.find().then(data=>{
+       Storage.find().populate("items").then(data=>{
            console.log(dbcourse.length);
-           console.log(data.length);
-           var length = dbcourse.length + data.length;
-           console.log(length);
-           dbcourse.push(data);
-        //   for(var i=dbcourse.length;i<=length;i++){
-        //       console.log("data"+data[i])
-        //       dbcourse.push(data[i]);
-        //   }
+          for(var i=0;i<=data.length;i++){
+              console.log("data"+data[i])
+              dbcourse.push(data[i]);
+          }
           console.log(dbcourse);
            return response.status(200).json(dbcourse);
        }).catch(err=>{
  return response.status(500).json(err);
        })
-   }).catch(err=>{
-
+   
+    })
    })
-})
+
 
 module.exports = router;
