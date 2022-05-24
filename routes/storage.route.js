@@ -23,7 +23,7 @@ fireBase.fireBaseStorage,
     location: request.body.location,
     video: request.body.video,
     storage_description: request.body.storage_description
-    ,image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+    ,images: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
 
     duration: request.body.duration,
 })
@@ -126,6 +126,7 @@ router.get("/view/:sid",(request,response)=>{
 })
 router.get("/view-storage",(request,response)=>{
     Storage.find().then(result=>{
+    
         return response.status(200).json(result)
     }).catch(
         err => {
