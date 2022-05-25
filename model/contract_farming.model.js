@@ -20,6 +20,7 @@ const contractSchema = new mongoose.Schema({
     Area: {
         type: String,
 
+
     },
     pending: {
         type: Boolean,
