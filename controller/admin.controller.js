@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const crypto = require("crypto");
 const { validationResult } = require("express-validator");
 const Admin = require('../model/admin.model');
 const config = require('config');
@@ -6,36 +7,57 @@ let jwt = require("jsonwebtoken");
 const { error } = require('winston');
 var algo = "aes256";
 var key = "password";
+
+
 exports.adminSignup = async(request, response, next) => {
-   
+
     const errors = validationResult(request);
     if (!errors.isEmpty())
         return response.status(400).json({ errors: errors.array() });
-    const { email, password} = request.body;
+    const { email, password } = request.body;
     try {
         let admin = await Admin.findOne({ email });
         if (admin) {
             return response.status(400).json({ msg: "already exists" })
         }
-        admin = new Admin({ email, password});
+        admin = new Admin({ email, password });
         const salt = await bcrypt.genSalt(10);
         admin.password = await bcrypt.hash(password, salt);
         admin.save().then(result => {
             console.log(result);
-     
+
             console.log(result);
             return response.status(200).json({ status: 'Success', result: result, });
         }).catch(err => {
             console.log(err);
             return response.status(500).json({ status: 'SignUp failed' });
         })
-     }catch(err) {
+    } catch (err) {
         console.log(err);
         return response.status(500).json(error);
 
-     }
+    }
 }
-exports.adminSignIn =async(request, response, next) => {
+
+// exports.adminSignup = (request, response, next) => {
+//     const errors = validationResult(request);
+//     if (!errors.isEmpty())
+//         return response.status(400).json({ errors: errors.array() });
+
+//     var cipher = crypto.createCipher(algo, key);
+//     var encrypted =
+//         cipher.update(request.body.password, "utf8", "hex") + cipher.final("hex");
+//     Admin.create({ email: request.body.email, password: encrypted })
+//         .then(result => {
+//             console.log(result);
+//             return response.status(200).json({ status: 'Success', result: result, });
+//         }).catch(err => {
+//             console.log(err);
+//             return response.status(500).json({ status: 'SignUp failed' });
+//         })
+// }
+
+exports.adminSignIn = async(request, response, next) => {
     const errors = validationResult(request);
     if (!errors.isEmpty())
         return response.status(400).json({ errors: errors.array() });
@@ -60,7 +82,7 @@ exports.adminSignIn =async(request, response, next) => {
         const payload = {
             admin: {
                 id: admin._id,
-                email:admin.email
+                email: admin.email
             }
         };
         console.log(payload);
@@ -69,7 +91,7 @@ exports.adminSignIn =async(request, response, next) => {
             payload,
             config.get('jwtSecret'), { expiresIn: '5 days' },
             (err, token) => {
-                if (err){
+                if (err) {
                     console.log(err);
                 }
                 console.log(token);
@@ -78,8 +100,47 @@ exports.adminSignIn =async(request, response, next) => {
         );
     } catch (err) {
         console.error(err.message);
-        response.status(500).json({msg:'Server error'});
+        response.status(500).json({ msg: 'Server error' });
     }
 
 
 }
+
+// exports.adminSignIn = (request, response, next) => {
+//     const errors = validationResult(request);
+//     if (!errors.isEmpty())
+//         return response.status(400).json({ errors: errors.array() });
+
+//     Admin.findOne({ email: request.body.email }).then((result) => {
+//         var decipher = crypto.createDecipher(algo, key);
+//         var decrypted =
+//             decipher.update(result.password, "hex", "utf8") +
+//             decipher.final("utf8");
+//         if (decrypted == request.body.password) {
+//             const payload = {
+//                 admin: {
+//                     id: result._id
+//                 }
+//             };
+//             jwt.sign(
+//                 payload,
+//                 config.get('jwtSecret'), { expiresIn: '5 days' },
+//                 (err, token) => {
+//                     if (err) throw err;
+//                     console.log(token);
+//                     return response.status(200)
+//                         .json({
+//                             status: "Login Success",
+//                             result: result,
+//                             token: token
+//                         });
+//                 })
+//         } else {
+//             return response.status(400).json({ status: 'Password has not match ! Try Again..' });
+//         }
+
+//     }).catch((err) => {
+//         console.log(err);
+//         return response.status(401).json(err);
+//     });
+// }
