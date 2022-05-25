@@ -2,35 +2,43 @@ const { booleanParser } = require('config/parser');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const contractSchema = new mongoose.Schema({
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"customers"
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "customers"
     },
     name: {
         type: String,
-    
+
     },
     mobile: {
         type: String,
     },
     image: {
         type: String,
-    
+
     },
     Area: {
         type: String,
-    
+
     },
-    email:{
+    pending: {
+        type: Boolean,
+        default: true
+    },
+
+    email: {
         type: String,
-        required:true
+        required: true
     },
     verification: {
         type: Boolean,
         default: false
     },
-    duration: {
-        type: String,
+    start_date: {
+        type: Date
+    },
+    end_date: {
+        type: Date
     },
     isApproved: {
         type: Boolean,
@@ -38,16 +46,16 @@ const contractSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required:true
+        required: true
     },
     reviews: [{
-     user: {
-         type:mongoose.Schema.Types.ObjectId,
-         ref:"customers"
-     },
-     feedback: {
-         type: String
-     }
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "customers"
+        },
+        feedback: {
+            type: String
+        }
     }],
     date: {
         type: Date,

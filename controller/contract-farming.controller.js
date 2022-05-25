@@ -62,4 +62,139 @@ exports.contract = (request, response, next) => {
             console.log(error)
             return response.status(500).json({ error: "there is an unwanted error" })
         })
+
+    exports.viewList = (request, response) => {
+        contract.find({ pending: true } && { pending: false }).then(result => {
+            return response.status(200).json(result)
+        }).catch(error => {
+            return response.status(500).json(error)
+        })
+    }
+
+
+    exports.lookanyone = (request, response) => {
+        contract.findOne({ _id: request.params.cid }).then(result => {
+            return response.status(200).json(result)
+        }).catch(error => {
+            return response.status(500).json(error)
+        })
+    }
+
+    exports.approved = async(request, response) => {
+        const data = await contract.findOne({ _id: request.params.cid })
+        console.log(data)
+        contract.updateOne({ _id: request.params.cid }, {
+            $set: {
+                pending: request.body.pending,
+                verification: request.body.verification,
+                isApproved: request.body.approved
+            }
+        }).then(result => {
+            console.log(result);
+            if (result.modifiedCount) {
+                try {
+                    var mailOptions = {
+                        from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                        to: data.email,
+                        subject: 'contract-farming approval',
+                        text: 'your documents are verified',
+                        html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement we ensure that your documents are verified.<br> and request has been approved by admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
+                    };
+
+                    transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                            printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'contract-farming');
+                            return response.status(200).json({ msg: 'you have mail notification on given email' + ' ' + result.name });
+
+                        }
+
+                    })
+                } catch (err) {
+                    console.log(err);
+                    printLogger(4, `***********  contract-error  *************${JSON.stringify(err)}`, 'contract-farming');
+                    return response.status(500).json({ msg: 'error find...' });
+                }
+            } else {
+                return response.status(201).json({ message: "Already approved" });
+            }
+        }).catch(error => {
+            console.log(error);
+            return response.status(500).json(error)
+        })
+    }
+
+
+    exports.aborted = async(request, response) => {
+
+        const data = await contract.findOne({ _id: request.params.cid })
+        console.log(data);
+        contract.updateOne({ _id: request.params.cid }, {
+            $set: {
+                pending: request.body.pending,
+                verification: request.body.verification,
+                isApproved: request.body.approved
+            }
+        }).then(result => {
+            if (result.modifiedCount) {
+                try {
+                    var mailOptions = {
+                        from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                        to: data.email,
+                        subject: 'contract-farming approval',
+                        text: 'your documents are verified',
+                        html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we ensure that your documents are not verified.<br> and request has been rejected from admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
+                    };
+
+                    transporter.sendMail(mailOptions, function(error, info) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                            printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'contract-farming');
+                            return response.status(200).json({ msg: 'you have mail notification on given email' + ' ' + result.name });
+
+                        }
+
+                    })
+                } catch (err) {
+                    console.log(err);
+                    printLogger(4, `***********  contract-error  *************${JSON.stringify(err)}`, 'contract-farming');
+                    return response.status(500).json({ msg: 'error find...' });
+                }
+                return response.status(201).json(result)
+            } else {
+                return response.status(200).json({ message: "Already aborted" });
+            }
+        }).catch(error => {
+            return response.status(500).json(error)
+        })
+    }
+
+
+    exports.abortedlist = (request, response) => {
+        contract.find({
+            pending: false,
+            isApproved: false,
+            verification: false
+        }).then(result => {
+            return response.status(200).json(result)
+        }).catch(error => {
+            return response.status(500).json(error)
+        })
+    }
+
+    exports.verified = (request, response) => {
+        contract.find({
+            pending: false,
+            isApproved: true,
+            verification: true
+        }).then(result => {
+            return response.status(200).json(result)
+        }).catch(error => {
+            return response.status(500).json(error)
+        })
+    }
 }
