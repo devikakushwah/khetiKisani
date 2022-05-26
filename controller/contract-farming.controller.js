@@ -62,6 +62,7 @@ exports.contract = (request, response, next) => {
                 console.log(error)
                 return response.status(500).json({ error: "there is an unwanted error" })
             })
+        }
 
         exports.viewList = (request, response) => {
             contract.find({ pending: true } && { pending: false }).then(result => {
@@ -196,5 +197,4 @@ exports.contract = (request, response, next) => {
                 return response.status(500).json(error)
             })
         }
-    }
-    //complete-backend
+    

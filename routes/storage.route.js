@@ -193,7 +193,7 @@ router.get("/view-storage/:sid", (request, response) => {
     console.log(request.params.sid);
 
     Storage.find({storageId:request.params.sid}).populate("items").then(result=>
-    
+    {
         console.log(result);
         return response.status(200).json(result)
     }).catch(
