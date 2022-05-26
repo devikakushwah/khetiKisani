@@ -19,6 +19,7 @@ mongoose.connect("mongodb+srv://devikakushwah:Radhakrishna%4029@newcluster.7o13k
 }).catch(error => {
     console.log("Unable to connect from database")
 })
+require('dotenv').config();
 const app = express();
 app.use(cors());
 

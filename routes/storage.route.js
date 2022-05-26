@@ -106,7 +106,7 @@ router.delete("/delete-items/:item_id/:sid",async(request, response) => {
 })
 router.get("/view-storage/:sid",(request,response)=>{
     console.log(request.params.sid);
-    Storage.find({storageId:request.params.sid}).then(result=>{
+    Storage.find({storageId:request.params.sid}).populate("items").then(result=>{
         console.log(result);
         return response.status(200).json(result)
     }).catch(
@@ -116,7 +116,7 @@ router.get("/view-storage/:sid",(request,response)=>{
 });
 router.get("/view/:sid",(request,response)=>{
     console.log(request.params.sid);
-    Storage.find({_id:request.params.sid}).populate("storageId").then(result=>{
+    Storage.find({_id:request.params.sid}).populate("storageId").populate("items").then(result=>{
         console.log(result);
         return response.status(200).json(result)
     }).catch(
