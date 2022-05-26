@@ -54,34 +54,10 @@ router.get("/view-services/:sid", (request, response) => {
     })
 })
 
-// router.post("/update", upload.single('image'),
-//     fireBase.fireBaseStorage,
-//     (request, response) => {
-//         Service.updateOne({ _id: request.body.sid }, {
-//                 $set: {
-//                     name: request.body.name,
-//                     charges: request.body.charges,
-//                     travellingCharge: request.body.travellingCharge,
-//                     description: request.body.description,
-//                     adminDescription: request.body.adminDescription,
-//                     image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
-//                     video: request.body.video,
-//                 }
-//             })
-//             .then(result => {
-//                 console.log(result);
-//                 return response.status(201).json(result);
-//             }).catch(err => {
-//                 console.log(err);
-//                 return response.status(500).json({ err: "server err.." })
-//             });
-//     })
-
-
-router.put("/update/:sid", upload.single('image'),
+router.post("/update", upload.single('image'),
     fireBase.fireBaseStorage,
     (request, response) => {
-        Service.updateOne({ _id: request.params.sid }, {
+        Service.updateOne({ _id: request.body.sid }, {
                 $set: {
                     name: request.body.name,
                     charges: request.body.charges,
@@ -99,7 +75,31 @@ router.put("/update/:sid", upload.single('image'),
                 console.log(err);
                 return response.status(500).json({ err: "server err.." })
             });
-    });
+    })
+
+
+// router.put("/update/:sid", upload.single('image'),
+//     fireBase.fireBaseStorage,
+//     (request, response) => {
+//         Service.updateOne({ _id: request.params.sid }, {
+//                 $set: {
+//                     name: request.body.name,
+//                     charges: request.body.charges,
+//                     travellingCharge: request.body.travellingCharge,
+//                     description: request.body.description,
+//                     adminDescription: request.body.adminDescription,
+//                     image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+//                     video: request.body.video,
+//                 }
+//             })
+//             .then(result => {
+//                 console.log(result);
+//                 return response.status(201).json(result);
+//             }).catch(err => {
+//                 console.log(err);
+//                 return response.status(500).json({ err: "server err.." })
+//             });
+//     });
 
 router.post("/delete", (request, response) => {
     console.log(request.body);
