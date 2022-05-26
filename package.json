@@ -25,11 +25,13 @@
     "mongoose": "^6.3.3",
     "multer": "^1.4.4",
     "nodemailer": "^6.7.5",
+    "otp-generator": "^4.0.0",
     "passport": "^0.5.3",
     "passport-oauth2": "^1.6.1",
     "razorpay": "^2.8.1",
     "request": "^2.88.2",
     "route-cache": "^0.4.7",
+    "twilio": "^3.77.1",
     "winston": "^3.7.2"
   }
 }

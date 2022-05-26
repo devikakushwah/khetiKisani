@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const fast2sms = require('fast-two-sms');
 const gravatar = require("gravatar");
 const nodemailer = require('nodemailer');
+const otpGenerator = require('otp-generator')
 const config = require('config');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
@@ -22,6 +23,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
+
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -29,7 +31,9 @@ var transporter = nodemailer.createTransport({
         pass: process.env.PASSWORD
     }
 });
-
+const accountsid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountsid, authToken);
 router.post('/signup',async (request, response) => {
 
     
@@ -44,7 +48,7 @@ router.post('/signup',async (request, response) => {
             let user = await User.findOne({ email });
             if (user) {
                 console.log("already exists");
-                return response.status(400).json({ msg: "already exists" })
+                return response.status(400).json({ msg: "This email is already assigned with another account, Please try another one!" })
             }
             user = new User({ name, email, mobile, password, occupation, address });
             const salt = await bcrypt.genSalt(10);
@@ -59,16 +63,21 @@ router.post('/signup',async (request, response) => {
                 console.log(result);
     
                 var options = {authorization : "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19" 
-                , message : ' Welcome to khetikisani! You have successfully registered' ,  numbers : [result.mobile]} 
+                , message : ' Welcome to krashi junction! You have successfully registered' ,  numbers : [result.mobile]} 
                 console.log(options);
                 fast2sms.sendMessage(options) //Asynchronous Function.
-
+               
+                
                 var mailOptions = {
                     from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
                     to: result.email,
-                    subject: 'Registration successful',
+                    subject: 'Email verification!',
                     text: 'Registration',
-                    html: '<b>Welcome !' + result.name + ' to become member of <h3>Krashi Sakha</h3></b>'
+                    html: "<b>Congratulations " + result.name + "! Your account has been created successfully on</b>" +
+                    "<h3><a href='http://localhost:4200'>Krishi Junction</a></h3>" +
+                    " <b>This link will be expired within 24 Hours," +
+                    " Please Click on the <a href=" + link + ">Link</a> to verify your email to activate your account.</b>" +
+                    "<b><br><br><br>Regards<br><h5>Krishi Junction</h5></b>"
                 };
     
                 transporter.sendMail(mailOptions, function(error, info) {
@@ -79,7 +88,7 @@ router.post('/signup',async (request, response) => {
                         printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'signup');
                         console.log("send sms");
      
-                        return response.status(200).json({ msg: 'Welcome' + ' ' + result.name });
+                        return response.status(200).json({  msg: "Congratulations :" + result.name + ", Your account has been created successfully, Please check your inbox to activate your account." });
     
                     }
                 })
