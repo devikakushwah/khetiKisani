@@ -9,79 +9,117 @@ var storage = multer.diskStorage({
     }
 });
 var upload = multer({ storage: storage });
- 
- router.post("/add",
-  upload.single('image'),
-   fireBase.fireBaseStorage,
-   (request,response) => {
-     console.log(request.body);
-     console.log(request.file);
-    Service.create({
-        name: request.body.name,
-        charges: request.body.charges,
-        travellingCharge: request.body.travellingCharge,
-        description :request.body.description,
-        adminDescription: request.body.adminDescription,
-       images: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" 
-       + request.file.filename + "?alt=media&token=abcddcba",
-        video:request.body.video,
 
-    }).then(result => {
-        console.log(result);
-        return response.status(200).json(result)
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).json(error)
-    })
- })
- router.get("/view-services",(request,response)=>{
-     Service.find().then(result => {
-        console.log(result);
-        return response.status(200).json(result)
-    }).catch(error => {
-        console.log(error);
-        return response.status(500).json(error)
-    })
- })
-
- router.get("/view-services/:sid",(request,response)=>{
-    Service.findOne({_id:request.params.sid}).then(result => {
-       console.log(result);
-       return response.status(200).json(result)
-   }).catch(error => {
-       console.log(error);
-       return response.status(500).json(error)
-   })
-})
-router.put("/update/:sid", upload.single('image'),
-fireBase.fireBaseStorage,
-(request,response)=>{
-    Service.updateOne({ _id: request.params.sid }, {
-        $set: {
+router.post("/add",
+    upload.single('image'),
+    fireBase.fireBaseStorage,
+    (request, response) => {
+        console.log(request.body);
+        console.log(request.file);
+        Service.create({
             name: request.body.name,
             charges: request.body.charges,
             travellingCharge: request.body.travellingCharge,
-            description :request.body.description,
+            description: request.body.description,
             adminDescription: request.body.adminDescription,
-            image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
-            video:request.body.video,
-        }
+            images: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" +
+                request.file.filename + "?alt=media&token=abcddcba",
+            video: request.body.video,
+
+        }).then(result => {
+            console.log(result);
+            return response.status(200).json(result)
+        }).catch(error => {
+            console.log(error);
+            return response.status(500).json(error)
+        })
     })
-    .then(result => {
-        console.log(result);
-        return response.status(201).json(result);
-    }).catch(err => {
-        console.log(err);
-        return response.status(500).json({ err: "server err.." })
+
+
+router.get("/view-services", (request, response) => {
+    Service.find().then(result => {
+        return response.status(200).json(result)
+    }).catch(error => {
+        console.log(error);
+        return response.status(500).json(error)
+    })
+})
+
+router.get("/view-services/:sid", (request, response) => {
+    Service.findOne({ _id: request.params.sid }).then(result => {
+        return response.status(200).json(result)
+    }).catch(error => {
+        console.log(error);
+        return response.status(500).json(error)
+    })
+})
+
+// router.post("/update", upload.single('image'),
+//     fireBase.fireBaseStorage,
+//     (request, response) => {
+//         Service.updateOne({ _id: request.body.sid }, {
+//                 $set: {
+//                     name: request.body.name,
+//                     charges: request.body.charges,
+//                     travellingCharge: request.body.travellingCharge,
+//                     description: request.body.description,
+//                     adminDescription: request.body.adminDescription,
+//                     image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+//                     video: request.body.video,
+//                 }
+//             })
+//             .then(result => {
+//                 console.log(result);
+//                 return response.status(201).json(result);
+//             }).catch(err => {
+//                 console.log(err);
+//                 return response.status(500).json({ err: "server err.." })
+//             });
+//     })
+
+
+router.put("/update/:sid", upload.single('image'),
+    fireBase.fireBaseStorage,
+    (request, response) => {
+        Service.updateOne({ _id: request.params.sid }, {
+                $set: {
+                    name: request.body.name,
+                    charges: request.body.charges,
+                    travellingCharge: request.body.travellingCharge,
+                    description: request.body.description,
+                    adminDescription: request.body.adminDescription,
+                    image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+                    video: request.body.video,
+                }
+            })
+            .then(result => {
+                console.log(result);
+                return response.status(201).json(result);
+            }).catch(err => {
+                console.log(err);
+                return response.status(500).json({ err: "server err.." })
+            });
     });
-});
-router.post('/review/:sid',async (request,response)=>{
+
+router.post("/delete", (request, response) => {
+    console.log(request.body);
+    Service.deleteOne({ _id: request.body.id }).then(result => {
+        console.log(result)
+        return response.status(200).json({ message: "Deleted successfully" })
+    }).catch(error => {
+        console.log(error)
+        return response.status(500).json(error)
+    })
+})
+
+
+router.post('/review/:sid', async(request, response) => {
     const reviews = {
         user: request.body.id,
         feedback: request.body.feedback,
     }
     let service = await Service.findOne({ _id: request.params.sid });
-    console.log("storage  "+ storage);
+    console.log("storage  " + storage);
     service.reviews.push(reviews);
     service.save().then(result => {
         console.log(result);
