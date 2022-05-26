@@ -8,9 +8,7 @@ const { error } = require('winston');
 var algo = "aes256";
 var key = "password";
 
-
 exports.adminSignup = async(request, response, next) => {
-
     const errors = validationResult(request);
     if (!errors.isEmpty())
         return response.status(400).json({ errors: errors.array() });
@@ -39,108 +37,52 @@ exports.adminSignup = async(request, response, next) => {
     }
 }
 
-// exports.adminSignup = (request, response, next) => {
-//     const errors = validationResult(request);
-//     if (!errors.isEmpty())
-//         return response.status(400).json({ errors: errors.array() });
-
-//     var cipher = crypto.createCipher(algo, key);
-//     var encrypted =
-//         cipher.update(request.body.password, "utf8", "hex") + cipher.final("hex");
-//     Admin.create({ email: request.body.email, password: encrypted })
-//         .then(result => {
-//             console.log(result);
-//             return response.status(200).json({ status: 'Success', result: result, });
-//         }).catch(err => {
-//             console.log(err);
-//             return response.status(500).json({ status: 'SignUp failed' });
-//         })
-// }
-
 exports.adminSignIn = async(request, response, next) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty())
-        return response.status(400).json({ errors: errors.array() });
-    const { email, password } = request.body;
+        const errors = validationResult(request);
+        if (!errors.isEmpty())
+            return response.status(400).json({ errors: errors.array() });
+        const { email, password } = request.body;
 
-    try {
-        let admin = await Admin.findOne({ email });
+        try {
+            let admin = await Admin.findOne({ email });
 
-        if (!admin) {
-            return response
-                .status(400)
-                .json({ errors: [{ msg: 'Invalid Credentials' }] });
-        }
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-            console.log("invalid password");
-            return response
-                .status(400)
-                .json({ errors: [{ msg: 'Invalid Password' }] });
-        }
-
-        const payload = {
-            admin: {
-                id: admin._id,
-                email: admin.email
+            if (!admin) {
+                return response
+                    .status(400)
+                    .json({ errors: [{ msg: 'Invalid Credentials' }] });
             }
-        };
-        console.log(payload);
+            const isMatch = await bcrypt.compare(password, admin.password);
+            if (!isMatch) {
+                console.log("invalid password");
+                return response
+                    .status(400)
+                    .json({ errors: [{ msg: 'Invalid Password' }] });
+            }
 
-        jwt.sign(
-            payload,
-            config.get('jwtSecret'), { expiresIn: '5 days' },
-            (err, token) => {
-                if (err) {
-                    console.log(err);
+            const payload = {
+                admin: {
+                    id: admin._id,
+                    email: admin.email
                 }
-                console.log(token);
-                response.status(200).json(token);
-            }
-        );
-    } catch (err) {
-        console.error(err.message);
-        response.status(500).json({ msg: 'Server error' });
+            };
+            console.log(payload);
+
+            jwt.sign(
+                payload,
+                config.get('jwtSecret'), { expiresIn: '5 days' },
+                (err, token) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log(token);
+                    response.status(200).json(token);
+                }
+            );
+        } catch (err) {
+            console.error(err.message);
+            response.status(500).json({ msg: 'Server error' });
+        }
+
+
     }
-
-
-}
-
-// exports.adminSignIn = (request, response, next) => {
-//     const errors = validationResult(request);
-//     if (!errors.isEmpty())
-//         return response.status(400).json({ errors: errors.array() });
-
-//     Admin.findOne({ email: request.body.email }).then((result) => {
-//         var decipher = crypto.createDecipher(algo, key);
-//         var decrypted =
-//             decipher.update(result.password, "hex", "utf8") +
-//             decipher.final("utf8");
-//         if (decrypted == request.body.password) {
-//             const payload = {
-//                 admin: {
-//                     id: result._id
-//                 }
-//             };
-//             jwt.sign(
-//                 payload,
-//                 config.get('jwtSecret'), { expiresIn: '5 days' },
-//                 (err, token) => {
-//                     if (err) throw err;
-//                     console.log(token);
-//                     return response.status(200)
-//                         .json({
-//                             status: "Login Success",
-//                             result: result,
-//                             token: token
-//                         });
-//                 })
-//         } else {
-//             return response.status(400).json({ status: 'Password has not match ! Try Again..' });
-//         }
-
-//     }).catch((err) => {
-//         console.log(err);
-//         return response.status(401).json(err);
-//     });
-// }
+    //bcrypt is used for password encryption

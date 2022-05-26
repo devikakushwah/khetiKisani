@@ -37,35 +37,16 @@ router.post("/add", upload.single('image'),
                 return response.status(500).json({ err: "server err.." })
             });
     });
-router.post("/add-items", async(request, response) => {
-    const item = {
-        name: request.body.name,
-        charges: request.body.charges,
-        description: request.body.description,
-        temperature: request.body.temperature,
-        weight: request.body.weight,
-        bookingDate: request.body.bookingDate,
-        durationNo: request.body.durationNo,
-        durationDay: request.body.durationDay
-    }
-    let storage = await Storage.findOne({ _id: request.body.sid });
-    console.log(storage);
-    storage.items.push(item);
-    storage.save().then(result => {
-        return response.status(200).json(result)
-    }).catch(
-        err => {
-            return response.status(500).json(err);
-        })
-})
-
-
 // router.post("/add-items", async(request, response) => {
 //     const item = {
 //         name: request.body.name,
 //         charges: request.body.charges,
 //         description: request.body.description,
-//         temperature: request.body.temperature
+//         temperature: request.body.temperature,
+//         weight: request.body.weight,
+//         bookingDate: request.body.bookingDate,
+//         durationNo: request.body.durationNo,
+//         durationDay: request.body.durationDay
 //     }
 //     let storage = await Storage.findOne({ _id: request.body.sid });
 //     console.log(storage);
@@ -77,6 +58,25 @@ router.post("/add-items", async(request, response) => {
 //             return response.status(500).json(err);
 //         })
 // })
+
+
+router.post("/add-items", async(request, response) => {
+    const item = {
+        name: request.body.name,
+        charges: request.body.charges,
+        description: request.body.description,
+        temperature: request.body.temperature
+    }
+    let storage = await Storage.findOne({ _id: request.body.sid });
+    console.log(storage);
+    storage.items.push(item);
+    storage.save().then(result => {
+        return response.status(200).json(result)
+    }).catch(
+        err => {
+            return response.status(500).json(err);
+        })
+})
 
 
 // router.put("/items/:sid/:item_id", async(request, response) => {
@@ -160,10 +160,25 @@ router.put("/update-items/:sid", async(request, response) => {
     })
 })
 
-// router.delete("/delete-items", async(request, response) => {
-//     let storage = await Storage.findOne({ _id: request.body.sid });
+router.delete("/delete-items", async(request, response) => {
+    let storage = await Storage.findOne({ _id: request.body.sid });
+    console.log(storage);
+    storage.items.pull({ _id: request.body.item_id });
+    storage.save().then(result => {
+        console.log(result);
+        return response.status(201).json(result)
+    }).catch(
+        err => {
+            console.log(err);
+            return response.status(500).json(err);
+        })
+})
+
+
+// router.delete("/delete-items/:item_id/:sid", async(request, response) => {
+//     let storage = await Storage.findOne({ _id: request.params.sid });
 //     console.log(storage);
-//     storage.items.pull({ _id: request.body.item_id });
+//     storage.items.pull({ _id: request.params.item_id });
 //     storage.save().then(result => {
 //         console.log(result);
 //         return response.status(201).json(result)
@@ -174,20 +189,6 @@ router.put("/update-items/:sid", async(request, response) => {
 //         })
 // })
 
-
-router.delete("/delete-items/:item_id/:sid", async(request, response) => {
-    let storage = await Storage.findOne({ _id: request.params.sid });
-    console.log(storage);
-    storage.items.pull({ _id: request.params.item_id });
-    storage.save().then(result => {
-        console.log(result);
-        return response.status(201).json(result)
-    }).catch(
-        err => {
-            console.log(err);
-            return response.status(500).json(err);
-        })
-})
 
 router.get("/view-storage/:sid", (request, response) => {
     console.log(request.params.sid);
@@ -234,15 +235,15 @@ router.get("/view-storage", (request, response) => {
         })
 });
 
-// router.post("/delete-storage", async(request, response) => {
+router.post("/delete-storage", async(request, response) => {
 
-//     Storage.deleteOne({ _id: request.body.store_id }).then(result => {
-//         return response.status(200).json({ message: "Storage Deleted" })
-//     }).catch(error => {
-//         return response.status(500).json({ error: "Unable to delete" })
-//     })
+    Storage.deleteOne({ _id: request.body.store_id }).then(result => {
+        return response.status(200).json({ message: "Storage Deleted" })
+    }).catch(error => {
+        return response.status(500).json({ error: "Unable to delete" })
+    })
 
-// })
+})
 
 
 router.post('/review/:sid', async(request, response) => {
