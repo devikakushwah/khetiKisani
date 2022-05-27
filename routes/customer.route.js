@@ -40,7 +40,7 @@ router.post('/signup', async(request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         console.log(errors);
-        return response.status(400).json({ msg: "validation error" });
+        return response.status(400).json(err);
     }
     const { name, email, password, mobile, occupation, address, } = request.body;
     try {
