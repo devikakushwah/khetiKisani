@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { request } = require('express');
 const multer = require('multer');
 const fireBase = require("../middleware/firebase");
 var storage = multer.diskStorage({
@@ -193,8 +194,7 @@ router.delete("/delete-items", async(request, response) => {
 router.get("/view-storage/:sid", (request, response) => {
     console.log(request.params.sid);
 
-    Storage.find({storageId:request.params.sid}).populate("items").then(result=>
-    {
+    Storage.find({ storageId: request.params.sid }).populate("items").then(result => {
         console.log(result);
         return response.status(200).json(result)
     }).catch(
@@ -203,9 +203,9 @@ router.get("/view-storage/:sid", (request, response) => {
         })
 });
 
-router.get("/view/:sid",(request,response)=>{
+router.get("/view/:sid", (request, response) => {
     console.log(request.params.sid);
-    Storage.find({_id:request.params.sid}).populate("storageId").populate("items").then(result=>{
+    Storage.find({ _id: request.params.sid }).populate("storageId").populate("reviews").populate("items").then(result => {
 
         console.log(result);
         return response.status(200).json(result)
@@ -245,20 +245,31 @@ router.post("/delete-storage", async(request, response) => {
 
 })
 
-
+router.get('/review/:sid', (request, response) => {
+    Storage.find({ _id: request.params.sid }).then(result => {
+        console.log("Review" + result);
+        return response.status(200).json(result)
+    }).catch(err => {
+        console.log(err);
+        return response.status(500).json(err);
+    })
+})
 router.post('/review/:sid', async(request, response) => {
-    const reviews = {
-        user: request.body.id,
+    console.log(request.body);
+    const item = {
+        user: request.body.users,
         feedback: request.body.feedback,
     }
     let storage = await Storage.findOne({ _id: request.params.sid });
-    console.log("storage  " + storage);
-    storage.reviews.push(reviews);
+    console.log(storage);
+    console.log(item);
+    storage.reviews.push(item);
     storage.save().then(result => {
         console.log(result);
         return response.status(200).json(result)
     }).catch(
         err => {
+            console.log(err);
             return response.status(500).json(err);
         })
 

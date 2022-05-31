@@ -98,7 +98,7 @@ router.post('/signup', async(request, response) => {
         }).catch(err => {
             console.log(err);
             printLogger(0, `*********** signup *************${JSON.stringify(err)}`, 'signup');
-            return response.status(500).json({ msg: 'not saved' });
+            return response.status(400).json({ msg: 'not saved' });
         })
     } catch (err) {
         console.log(err);

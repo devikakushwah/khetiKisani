@@ -71,7 +71,7 @@ router.post("/pay", (request, response) => {
     try {
         console.log("payment");
         instance.orders.create({
-            amount: request.body.amount,
+            amount: 50000,
             currency: "INR"
         }, (err, order) => {
             if (err) {
@@ -79,11 +79,11 @@ router.post("/pay", (request, response) => {
                 response.status(200).json(err);
             } else
                 console.log(order);
-            response.status(200).json(order);
+            response.status(400).json(order);
         })
     } catch (err) {
         console.log(err);
-        response.status(200).json(err);
+        response.status(500).json(err);
     }
 });
 
@@ -98,7 +98,7 @@ router.post('/payment-status', (req, res) => {
         }).catch((err) => {
             console.log(err);
 
-            res.status(404).json(err);
+            res.status(400).json(err);
         });
     } catch (err) {
         console.log(err);

@@ -5,7 +5,7 @@ const routeCache = require('route-cache');
 const { printLogger } = require('../core/utility');
 router.post('/add/:uid/:sid', async(request, response) => {
     try {
-
+        console.log(request.body);
         const { payment, mobile, total } = request.body;
         const userId = request.params.uid;
         const storage_id = request.params.sid;
@@ -56,6 +56,7 @@ router.get('/view-booked', (request, response) => {
 
 router.get('/views/:bid', (request, response) => {
     try {
+
         StorageBooked.find({ _id: request.params.bid }).populate("storage_id").populate("userId").then(result => {
             console.log(result);
             printLogger(2, `*********** view order *************${JSON.stringify(result)}`, 'order');
@@ -74,7 +75,8 @@ router.get('/views/:bid', (request, response) => {
 
 router.get('/view-booked/:uid', (request, response) => {
     try {
-        StorageBooked.find({ userId: request.params.uid }).populate("items").then(result => {
+
+        StorageBooked.find({ userId: request.params.uid }).populate("storage_id").populate("userId").populate("items").then(result => {
             console.log(result);
             printLogger(2, `*********** view order *************${JSON.stringify(result)}`, 'order');
             response.status(200).json(result);

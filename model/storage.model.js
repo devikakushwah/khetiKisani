@@ -62,7 +62,8 @@ const storageSchema = new mongoose.Schema({
             ref: "customers"
         },
         feedback: {
-            type: String
+            type: String,
+
         }
     }],
 
