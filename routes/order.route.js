@@ -53,7 +53,7 @@ router.post("/place-order", auth, (request, response) => {
                     console.log('Email sent: ' + info.response);
                     printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'signup');
                     console.log("send sms and otp");
-
+                  console.log(result);
                     return response.status(200).json({ msg: 'Welcome' + ' ' + result.name });
 
                 }
