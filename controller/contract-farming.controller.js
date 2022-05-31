@@ -65,7 +65,8 @@ exports.contract = (request, response, next) => {
         }
 
         exports.viewList = (request, response) => {
-            contract.find({ pending: true } && { pending: false }).then(result => {
+            console.log(request.body);
+            contract.find().then(result => {
                 return response.status(200).json(result)
             }).catch(error => {
                 return response.status(500).json(error)
@@ -82,13 +83,14 @@ exports.contract = (request, response, next) => {
         }
 
         exports.approved = async(request, response) => {
+            console.log(request.body);
             const data = await contract.findOne({ _id: request.params.cid })
             console.log(data)
             contract.updateOne({ _id: request.params.cid }, {
                 $set: {
                     pending: request.body.pending,
                     verification: request.body.verification,
-                    isApproved: request.body.approved
+                    isApproved: request.body.isApproved
                 }
             }).then(result => {
                 console.log(result);
@@ -118,8 +120,8 @@ exports.contract = (request, response, next) => {
                         printLogger(4, `***********  contract-error  *************${JSON.stringify(err)}`, 'contract-farming');
                         return response.status(500).json({ msg: 'error find...' });
                     }
-                } else {
-                    return response.status(201).json({ message: "Already approved" });
+                
+                return response.status(200).json({message:"Request approved"});
                 }
             }).catch(error => {
                 console.log(error);
@@ -146,7 +148,7 @@ exports.contract = (request, response, next) => {
                             to: data.email,
                             subject: 'contract-farming approval',
                             text: 'your documents are verified',
-                            html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we ensure that your documents are not verified.<br> and request has been rejected from admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
+                            html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we checked your documents but got some faults thats why documents are not verified.<br> and request has been rejected by admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
                         };
 
                         transporter.sendMail(mailOptions, function(error, info) {
@@ -165,10 +167,8 @@ exports.contract = (request, response, next) => {
                         printLogger(4, `***********  contract-error  *************${JSON.stringify(err)}`, 'contract-farming');
                         return response.status(500).json({ msg: 'error find...' });
                     }
-                    return response.status(201).json(result)
-                } else {
-                    return response.status(200).json({ message: "Already aborted" });
-                }
+                    return response.status(201).json({message:"Request rejected"});
+                } 
             }).catch(error => {
                 return response.status(500).json(error)
             })
