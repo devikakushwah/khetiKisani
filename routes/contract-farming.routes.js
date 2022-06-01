@@ -14,8 +14,16 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-
-
+const contract = require('../model/contract_farming.model')
+router.get("/approve", (request, response) => {
+    contract.find({}, { isApproved: false }).then(result => {
+        console.log(result);
+        return response.status(200).json(result);
+    }).catch(err => {
+        console.log(err);
+        return response.status(500).json(err);
+    })
+});
 
 router.post("/contract-farming", upload.single('image'), fireBase.fireBaseStorage, userController.contract);
 
