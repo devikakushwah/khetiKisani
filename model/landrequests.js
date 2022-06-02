@@ -5,11 +5,11 @@ const requestSchema = new mongoose.Schema({
         ref:"customers"
     },
     contractId:{
-        types: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref:"contracts"
     },
     isAccepted:{
-        type: boolean,
+        type: Boolean,
         default:false
     },
     date:{
