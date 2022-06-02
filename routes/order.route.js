@@ -32,18 +32,18 @@ router.post("/place-order", auth, (request, response) => {
 
             var options = {
                 authorization: "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19",
-                message: ' Welcome to khetikisani! You have successfully placed order',
+                message: ' Welcome to krishi junction! You have successfully placed order',
                 numbers: [result.mobile]
             }
             console.log(options);
             fast2sms.sendMessage(options) //Asynchronous Function.
 
             var mailOptions = {
-                from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                from: '"Krashi Junction "<devikakushwah29@gmail.com>',
                 to: request.user.email,
                 subject: 'Registration successful',
                 text: 'Registration',
-                html: '<b>Welcome !' + ' to become member of <h3>Krashi Sakha</h3></b>'
+                html: '<b>Welcome !' + ' to become member of <h3>Krishi Junction</h3></b>'
             };
 
             transporter.sendMail(mailOptions, function(error, info) {
@@ -53,7 +53,7 @@ router.post("/place-order", auth, (request, response) => {
                     console.log('Email sent: ' + info.response);
                     printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'signup');
                     console.log("send sms and otp");
-                  console.log(result);
+                    console.log(result);
                     return response.status(200).json({ msg: 'Welcome' + ' ' + result.name });
 
                 }

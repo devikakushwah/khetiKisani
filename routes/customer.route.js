@@ -238,33 +238,6 @@ router.post('/edit-profile/:id', async(request, response) => {
     } catch (error) {
         return response.status(500).json({ error: error.array });
     }
-
-    // User.updateOne(
-    //     { _id: request.params.id },
-    //     {
-    //       $set: {
-
-    //       }
-    //     }
-    //   )
-    //     .then((result) => {
-    //       console.log(result);
-    //       printLogger(2,`login success : ${JSON.stringify(result)}`);
-    //       if (result.modifiedCount) {
-    //         printLogger(2,`login success : ${JSON.stringify(result.modifiedCount)}`);
-    //             return response.status(200).json(result);
-
-    //       }
-    //       else{
-    //         printLogger(0,`login success : ${JSON.stringify(result)}`);
-    //         return response.status(200).json(result.modifiedCount);
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
-    //       return response.status(404).json(err);
-    //     });
-
 });
 
 router.post("/search-product", async(request, response) => {

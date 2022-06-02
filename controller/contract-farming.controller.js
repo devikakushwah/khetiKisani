@@ -95,7 +95,7 @@ exports.approved = async(request, response) => {
         if (result.modifiedCount) {
             try {
                 var mailOptions = {
-                    from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                    from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                     to: data.email,
                     subject: 'contract-farming approval',
                     text: 'your documents are verified',
@@ -142,11 +142,11 @@ exports.aborted = async(request, response) => {
         if (result.modifiedCount) {
             try {
                 var mailOptions = {
-                    from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                    from: '"Krashi Junction "<devikakushwah29@gmail.com>',
                     to: data.email,
-                    subject: 'contract-farming approval',
-                    text: 'your documents are verified',
-                    html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we ensure that your documents are not verified.<br> and request has been rejected from admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
+                    subject: 'contract-farming rejection',
+                    text: 'your documents are not verified',
+                    html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we ensure that your documents are not verified.<br> and request has been rejected by admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krishi Junction</h3>'
                 };
 
                 transporter.sendMail(mailOptions, function(error, info) {
@@ -165,9 +165,7 @@ exports.aborted = async(request, response) => {
                 printLogger(4, `***********  contract-error  *************${JSON.stringify(err)}`, 'contract-farming');
                 return response.status(500).json({ msg: 'error find...' });
             }
-            return response.status(201).json(result)
-        } else {
-            return response.status(200).json({ message: "Already aborted" });
+            return response.status(200).json(result)
         }
     }).catch(error => {
         return response.status(500).json(error)
