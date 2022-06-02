@@ -8,6 +8,9 @@ const auth = require('../middleware/customer.auth');
 const { printLogger } = require('../core/utility');
 const Razorpay = require("razorpay");
 var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
+
+
+// var instance = new Razorpay({ key_id: 'rzp_test_7mhArK6g7mgek0', key_secret: 'Pn50vQs9YfV6fKv2SL8OpqCd' });
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -66,45 +69,91 @@ router.post("/place-order", auth, (request, response) => {
         });
 
 });
-router.post("/pay", (request, response) => {
-    console.log("data");
-    try {
-        console.log("payment");
+router.post("/pay",(req,res)=>{
+    try{
+        let reqBody = req.body;
+        printLogger(2, `*********** payment *************${JSON.stringify(reqBody)}`, 'order');
         instance.orders.create({
             amount: request.body.amount,
             currency: "INR"
-        }, (err, order) => {
-            if (err) {
-                console.log(err);
-                response.status(200).json(err);
-            } else
-                console.log(order);
-            response.status(200).json(order);
-        })
-    } catch (err) {
-        console.log(err);
-        response.status(200).json(err);
-    }
-});
+          },(err,order)=>{
+              if(err){
+                printLogger(0, `*********** payment *************${JSON.stringify(err)}`, 'order');
+                  console.log(err);
+                  res.status(200).json(err);
+              }
+              else
+                 console.log(order);
+                 printLogger(2, `*********** place order *************${JSON.stringify(order)}`, 'order');
+                 res.status(200).json(order);
+          })    
+        }catch(err){
+            console.log(err);
+            printLogger(4, `*********** payment api *************${JSON.stringify(err)}`, 'order');
+            res.status(200).json(err);
+        }  
+    });
+    // router.post("/pay", (request, response) => {
+        //     console.log("data");
+        //     try {
+        //         console.log("payment");
+        //         instance.orders.create({
+        //             amount: request.body.amount,
+        //             currency: "INR"
+        //         }, (err, order) => {
+        //             if (err) {
+        //                 console.log(err);
+        //                 response.status(200).json(err);
+        //             } else
+        //                 console.log(order);
+        //             response.status(200).json(order);
+        //         })
+        //     } catch (err) {
+        //         console.log(err);
+        //         response.status(200).json(err);
+        //     }
+        // });
+        
 
-router.post('/payment-status', (req, res) => {
-    console.log("payment-status api");
-    console.log(req.body.razorpay_payment_id)
-    try {
+router.post('/payment-status',(req,res)=>{
+    console.log("payment -status"+req.body.razorpay_payment_id);
+    try{
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
-
-            res.status(200).json({ msg: "success" });
+            printLogger(2, `*********** payment *************${JSON.stringify(result)}`, 'order');
+            res.send("payment success");
         }).catch((err) => {
             console.log(err);
-
+            printLogger(0, `*********** payment *************${JSON.stringify(err)}`, 'order');
             res.status(404).json(err);
         });
-    } catch (err) {
+    }catch(err){
+
         console.log(err);
+        printLogger(4, `*********** payment *************${JSON.stringify(err)}`, 'order');
         res.status(500).json(err);
     }
-});
+    });
+
+
+// router.post('/payment-status', (req, res) => {
+//     console.log("payment-status api");
+//     console.log(req.body.razorpay_payment_id)
+//     try {
+//         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
+//             console.log(result);
+
+//             res.status(200).json({ msg: "success" });
+//         }).catch((err) => {
+//             console.log(err);
+
+//             res.status(404).json(err);
+//         });
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json(err);
+//     }
+// });
 
 router.get('/view-order', (request, response) => {
     try {
