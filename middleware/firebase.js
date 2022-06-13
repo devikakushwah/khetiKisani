@@ -17,8 +17,8 @@ exports.fireBaseStorage = async(request, response, next) => {
         console.log(request.file.filename);
         await storage.bucket(bucketName).upload(path.join(__dirname, '../', "public/images/") + request.file.filename, {
             gzip: true,
-            metedata: {
-                metedata: {
+            metadata: {
+                metadata: {
                     firebaseStorageDownloadTokens: "abcddcba "
                 }
             }

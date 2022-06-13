@@ -35,18 +35,18 @@ router.post("/place-order", auth, (request, response) => {
 
             var options = {
                 authorization: "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19",
-                message: ' Welcome to khetikisani! You have successfully placed order',
+                message: ' Welcome to krishi junction! You have successfully placed order',
                 numbers: [result.mobile]
             }
             console.log(options);
             fast2sms.sendMessage(options) //Asynchronous Function.
 
             var mailOptions = {
-                from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                from: '"Krashi Junction "<devikakushwah29@gmail.com>',
                 to: request.user.email,
                 subject: 'Registration successful',
                 text: 'Registration',
-                html: '<b>Welcome !' + ' to become member of <h3>Krashi Sakha</h3></b>'
+                html: '<b>Welcome !' + ' to become member of <h3>Krishi Junction</h3></b>'
             };
 
             transporter.sendMail(mailOptions, function(error, info) {
@@ -56,7 +56,7 @@ router.post("/place-order", auth, (request, response) => {
                     console.log('Email sent: ' + info.response);
                     printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'signup');
                     console.log("send sms and otp");
-                  console.log(result);
+                    console.log(result);
                     return response.status(200).json({ msg: 'Welcome' + ' ' + result.name });
 
                 }
@@ -69,71 +69,70 @@ router.post("/place-order", auth, (request, response) => {
         });
 
 });
-router.post("/pay",(req,res)=>{
-    try{
+router.post("/pay", (req, res) => {
+    try {
         let reqBody = req.body;
         printLogger(2, `*********** payment *************${JSON.stringify(reqBody)}`, 'order');
         instance.orders.create({
             amount: request.body.amount,
             currency: "INR"
-          },(err,order)=>{
-              if(err){
+        }, (err, order) => {
+            if (err) {
                 printLogger(0, `*********** payment *************${JSON.stringify(err)}`, 'order');
-                  console.log(err);
-                  res.status(200).json(err);
-              }
-              else
-                 console.log(order);
-                 printLogger(2, `*********** place order *************${JSON.stringify(order)}`, 'order');
-                 res.status(200).json(order);
-          })    
-        }catch(err){
-            console.log(err);
-            printLogger(4, `*********** payment api *************${JSON.stringify(err)}`, 'order');
-            res.status(200).json(err);
-        }  
-    });
-    // router.post("/pay", (request, response) => {
-        //     console.log("data");
-        //     try {
-        //         console.log("payment");
-        //         instance.orders.create({
-        //             amount: request.body.amount,
-        //             currency: "INR"
-        //         }, (err, order) => {
-        //             if (err) {
-        //                 console.log(err);
-        //                 response.status(200).json(err);
-        //             } else
-        //                 console.log(order);
-        //             response.status(200).json(order);
-        //         })
-        //     } catch (err) {
-        //         console.log(err);
-        //         response.status(200).json(err);
-        //     }
-        // });
-        
+                console.log(err);
+                res.status(200).json(err);
+            } else
+                console.log(order);
+            printLogger(2, `*********** place order *************${JSON.stringify(order)}`, 'order');
+            res.status(200).json(order);
+        })
+    } catch (err) {
+        console.log(err);
+        printLogger(4, `*********** payment api *************${JSON.stringify(err)}`, 'order');
+        res.status(200).json(err);
+    }
+});
+// router.post("/pay", (request, response) => {
+//     console.log("data");
+//     try {
+//         console.log("payment");
+//         instance.orders.create({
+//             amount: request.body.amount,
+//             currency: "INR"
+//         }, (err, order) => {
+//             if (err) {
+//                 console.log(err);
+//                 response.status(200).json(err);
+//             } else
+//                 console.log(order);
+//             response.status(200).json(order);
+//         })
+//     } catch (err) {
+//         console.log(err);
+//         response.status(200).json(err);
+//     }
+// });
 
-router.post('/payment-status',(req,res)=>{
-    console.log("payment -status"+req.body.razorpay_payment_id);
-    try{
+
+router.post('/payment-status', (req, res) => {
+    console.log("payment -status" + req.body.razorpay_payment_id);
+    try {
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
             printLogger(2, `*********** payment *************${JSON.stringify(result)}`, 'order');
-            res.send("payment success");
+            res.status(200).json("success");
         }).catch((err) => {
             console.log(err);
             printLogger(0, `*********** payment *************${JSON.stringify(err)}`, 'order');
-            res.status(404).json(err);
+            res.status(200).json(err);
         });
-    }catch(err){
+    } catch (err) {
 
         console.log(err);
         printLogger(4, `*********** payment *************${JSON.stringify(err)}`, 'order');
-        res.status(500).json(err);
+        res.status(200).json(err);
     }
-    });
+});
 
 
 // router.post('/payment-status', (req, res) => {

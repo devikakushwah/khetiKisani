@@ -79,45 +79,6 @@ router.post("/add-items", async(request, response) => {
 })
 
 
-// router.put("/items/:sid/:item_id", async(request, response) => {
-//     var storage = await Storage.findOne({ _id: request.params.sid });
-//     var result = storage.items.filter(obj => {
-//         return obj._id == (request.params.item_id)
-//     })
-//     const { charges, name, description, temperature } = request.body;
-//     if (name) {
-//         result[0].name = name
-//     }
-//     if (charges) {
-//         result[0].charges = charges
-//     }
-//     if (description) {
-//         result[0].description = description
-//     }
-//     if (temperature) {
-//         result[0].temperature = temperature
-//     }
-//     for (let i = 0; i < storage.items.length; i++) {
-//         if (storage.items[i]._id == request.body.id) {
-//             storage.items.pull({ _id: request.body.id });
-//             storage.items.push({
-//                 name: result[0].name,
-//                 charges: result[0].charges,
-//                 temperature: result[0].temperature,
-//                 description: result[0].description,
-//                 _id: result[0]._id
-//             })
-//         }
-//     }
-//     storage.save().then((result) => {
-//         response.status(200).json(result)
-//     }).catch((err) => {
-//         response.status(500).json(err)
-
-//     })
-// })
-
-
 router.put("/update-items/:sid", async(request, response) => {
     var storage = await Storage.findOne({ _id: request.params.sid });
     var result = storage.items.filter(obj => {
@@ -193,8 +154,7 @@ router.delete("/delete-items", async(request, response) => {
 router.get("/view-storage/:sid", (request, response) => {
     console.log(request.params.sid);
 
-    Storage.find({storageId:request.params.sid}).populate("items").then(result=>
-    {
+    Storage.find({ storageId: request.params.sid }).populate("items").then(result => {
         console.log(result);
         return response.status(200).json(result)
     }).catch(
@@ -203,9 +163,9 @@ router.get("/view-storage/:sid", (request, response) => {
         })
 });
 
-router.get("/view/:sid",(request,response)=>{
+router.get("/view/:sid", (request, response) => {
     console.log(request.params.sid);
-    Storage.find({_id:request.params.sid}).populate("storageId").populate("items").then(result=>{
+    Storage.find({ _id: request.params.sid }).populate("storageId").populate("items").then(result => {
 
         console.log(result);
         return response.status(200).json(result)

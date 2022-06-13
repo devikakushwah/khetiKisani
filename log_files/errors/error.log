@@ -31,3 +31,5 @@
 {"level":"error","message":"login success : {\"acknowledged\":true,\"modifiedCount\":0,\"upsertedId\":null,\"upsertedCount\":0,\"matchedCount\":1}","timestamp":"Sat 21-May-yy 12:59:30 AM"}
 {"level":"error","message":"login success : {\"acknowledged\":true,\"modifiedCount\":0,\"upsertedId\":null,\"upsertedCount\":0,\"matchedCount\":1}","timestamp":"Sun 22-May-yy 10:28:03 PM"}
 {"level":"error","message":"*********** signup *************{}","timestamp":"Thu 26-May-yy 05:53:44 PM"}
+{"level":"error","message":"*********** payment *************{\"statusCode\":400,\"error\":{\"code\":\"BAD_REQUEST_ERROR\",\"description\":\"The id provided does not exist\",\"source\":\"business\",\"step\":\"payment_initiation\",\"reason\":\"input_validation_failed\",\"metadata\":{}}}","timestamp":"Thu 02-Jun-yy 11:17:30 PM"}
+{"level":"error","message":"*********** payment *************{\"statusCode\":400,\"error\":{\"code\":\"BAD_REQUEST_ERROR\",\"description\":\"The id provided does not exist\",\"source\":\"business\",\"step\":\"payment_initiation\",\"reason\":\"input_validation_failed\",\"metadata\":{}}}","timestamp":"Sat 11-Jun-yy 04:18:58 PM"}

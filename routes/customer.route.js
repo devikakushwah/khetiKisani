@@ -63,7 +63,7 @@ router.post('/signup', async(request, response) => {
 
             var options = {
                 authorization: "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19",
-                message: ' Welcome to krashi junction! You have successfully registered',
+                message: ' Welcome to krishi junction! You have successfully registered',
                 numbers: [result.mobile]
             }
             console.log(options);
@@ -71,12 +71,12 @@ router.post('/signup', async(request, response) => {
 
 
             var mailOptions = {
-                from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                 to: result.email,
                 subject: 'Email verification!',
                 text: 'Registration',
                 html: "<b>Congratulations " + result.name + "! Your account has been created successfully on</b>" +
-                    "<h3><a href='http://localhost:4200'>Krishi Junction</a></h3>" +
+                    "<h3><a href='https://krishi-junction.herokuapp.com'>Krishi Junction</a></h3>" +
                     " <b>This link will be expired within 24 Hours," +
                     " Please Click on the <a href=" + ">Link</a> to verify your email to activate your account.</b>" +
                     "<b><br><br><br>Regards<br><h5>Krishi Junction</h5></b>"
@@ -238,33 +238,6 @@ router.post('/edit-profile/:id', async(request, response) => {
     } catch (error) {
         return response.status(500).json({ error: error.array });
     }
-
-    // User.updateOne(
-    //     { _id: request.params.id },
-    //     {
-    //       $set: {
-
-    //       }
-    //     }
-    //   )
-    //     .then((result) => {
-    //       console.log(result);
-    //       printLogger(2,`login success : ${JSON.stringify(result)}`);
-    //       if (result.modifiedCount) {
-    //         printLogger(2,`login success : ${JSON.stringify(result.modifiedCount)}`);
-    //             return response.status(200).json(result);
-
-    //       }
-    //       else{
-    //         printLogger(0,`login success : ${JSON.stringify(result)}`);
-    //         return response.status(200).json(result.modifiedCount);
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       printLogger(0,`error occured in router: ${JSON.stringify(err)}`);
-    //       return response.status(404).json(err);
-    //     });
-
 });
 
 router.post("/search-product", async(request, response) => {

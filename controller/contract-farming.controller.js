@@ -33,11 +33,11 @@ exports.contract = (request, response, next) => {
             console.log(result)
             try {
                 var mailOptions = {
-                    from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                    from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                     to: result.email,
                     subject: 'contract-farming registration',
                     text: 'Application has been sent successfully',
-                    html: '<b>Welcome !</b>' + result.name + '<br> your application has been sent to the admin department of krishi sakha.<br> we will inform you as soon as possible regarding your application updation.</br> <br> Thank you <br><h3>Krashi Sakha</h3>'
+                    html: '<b>Welcome !</b>' + result.name + '<br> your application has been sent to the admin department of krishi Junction.<br> we will inform you as soon as possible regarding your application updation.</br> <br> Thank you <br><h3>Krishi Junction</h3>'
                 };
 
                 transporter.sendMail(mailOptions, function(error, info) {
@@ -92,14 +92,14 @@ exports.approved = async(request, response) => {
         }
     }).then(result => {
         console.log(result);
-        if (result.modifiedCount) {
+        if (result.modifiedCount || result.acknowledged) {
             try {
                 var mailOptions = {
-                    from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                    from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                     to: data.email,
                     subject: 'contract-farming approval',
                     text: 'your documents are verified',
-                    html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement we ensure that your documents are verified.<br> and request has been approved by admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
+                    html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement we ensure that your documents are verified.<br> and request has been approved by admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krishi Junction</h3>'
                 };
 
                 transporter.sendMail(mailOptions, function(error, info) {
@@ -139,14 +139,14 @@ exports.aborted = async(request, response) => {
             isApproved: request.body.approved
         }
     }).then(result => {
-        if (result.modifiedCount) {
+        if (result.modifiedCount || result.acknowledged) {
             try {
                 var mailOptions = {
-                    from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                    from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                     to: data.email,
-                    subject: 'contract-farming approval',
-                    text: 'your documents are verified',
-                    html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we ensure that your documents are not verified.<br> and request has been rejected from admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krashi Sakha</h3>'
+                    subject: 'contract-farming rejection',
+                    text: 'your documents are not verified',
+                    html: '<b>Dear </b>' + data.name + '<br> For your acknowledgement, we ensure that your documents are not verified.<br> and request has been rejected by admin.</br> <br> Thank you</br> <br>Regards<br><h3>Krishi Junction</h3>'
                 };
 
                 transporter.sendMail(mailOptions, function(error, info) {
@@ -165,9 +165,7 @@ exports.aborted = async(request, response) => {
                 printLogger(4, `***********  contract-error  *************${JSON.stringify(err)}`, 'contract-farming');
                 return response.status(500).json({ msg: 'error find...' });
             }
-            return response.status(201).json(result)
-        } else {
-            return response.status(200).json({ message: "Already aborted" });
+            return response.status(200).json(result)
         }
     }).catch(error => {
         return response.status(500).json(error)
