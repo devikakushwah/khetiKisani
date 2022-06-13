@@ -63,7 +63,7 @@ router.post('/signup', async(request, response) => {
 
             var options = {
                 authorization: "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19",
-                message: ' Welcome to krashi junction! You have successfully registered',
+                message: ' Welcome to krishi junction! You have successfully registered',
                 numbers: [result.mobile]
             }
             console.log(options);
@@ -71,12 +71,12 @@ router.post('/signup', async(request, response) => {
 
 
             var mailOptions = {
-                from: '"Krashi Sakha "<devikakushwah29@gmail.com>',
+                from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                 to: result.email,
                 subject: 'Email verification!',
                 text: 'Registration',
                 html: "<b>Congratulations " + result.name + "! Your account has been created successfully on</b>" +
-                    "<h3><a href='http://localhost:4200'>Krishi Junction</a></h3>" +
+                    "<h3><a href='https://krishi-junction.herokuapp.com'>Krishi Junction</a></h3>" +
                     " <b>This link will be expired within 24 Hours," +
                     " Please Click on the <a href=" + ">Link</a> to verify your email to activate your account.</b>" +
                     "<b><br><br><br>Regards<br><h5>Krishi Junction</h5></b>"
