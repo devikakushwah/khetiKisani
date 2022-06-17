@@ -1,7 +1,15 @@
 const { validator, validationResult } = require('express-validator');
 const contract = require('../model/contract_farming.model')
+const cloudinary = require('cloudinary');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+
+cloudinary.config({
+    cloud_name: "divfjsxkj",
+    api_key: "519969236375722",
+    api_secret: "GqRAukfL0NlrKKrsyA0prw_9wKM",
+})
+
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -11,13 +19,10 @@ var transporter = nodemailer.createTransport({
 });
 
 
-
-exports.contract = (request, response, next) => {
-
-    // const errors = validationResult(request)
-    // if (!errors.isEmpty)
-    //     return response.status(400).json({ errors: errors.array() });
-    // console.log("contract-farming data :  " + request.body);
+exports.contract = async(request, response, next) => {
+    var result = await cloudinary.v2.uploader.upload(request.file.path);
+    let pic = result.url;
+    console.log("cloudinary Url" + pic);
 
     contract.create({
             name: request.body.name,
@@ -25,7 +30,7 @@ exports.contract = (request, response, next) => {
             mobile: request.body.mobile,
             address: request.body.address,
             description: request.body.description,
-            image: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
+            image: pic,
             Area: request.body.area,
             start_date: request.body.start_date,
             end_date: request.body.end_date,
