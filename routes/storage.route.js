@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const multer = require('multer');
-const fireBase = require("../middleware/firebase");
 const cloudinary = require('cloudinary');
 var storage = multer.diskStorage({
     destination: 'public/images',
@@ -44,6 +43,35 @@ router.post("/add", upload.single('image'), async(request, response) => {
             return response.status(500).json({ err: "server err.." })
         });
 });
+
+
+
+router.post("/update", upload.single('image'), async(request, response) => {
+    var result = await cloudinary.v2.uploader.upload(request.file.path);
+    let pic = result.url;
+    console.log("cloudinary Url" + pic);
+
+    Storage.updateOne({ _id: request.body.storeId }, {
+            $set: {
+                storageId: request.body.storageId,
+                name: request.body.name,
+                capacity: request.body.capacity,
+                location: request.body.location,
+                video: request.body.video,
+                storage_description: request.body.storage_description,
+                images: pic,
+                duration: request.body.duration,
+            }
+        })
+        .then(result => {
+            console.log(result);
+            return response.status(200).json(result);
+        }).catch(err => {
+            console.log(err);
+            return response.status(500).json({ err: "server err.." })
+        });
+});
+
 
 // router.post("/add-items", async(request, response) => {
 //     const item = {

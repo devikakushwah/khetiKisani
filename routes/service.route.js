@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Service = require('../model/service.model');
 const multer = require('multer');
-const fireBase = require("../middleware/firebase");
 const cloudinary = require('cloudinary');
 var storage = multer.diskStorage({
     destination: 'public/images',
@@ -72,7 +71,7 @@ router.post("/update", upload.single('image'),
                     travellingCharge: request.body.travellingCharge,
                     description: request.body.description,
                     adminDescription: request.body.adminDescription,
-                    image: pic,
+                    images: pic,
                     video: request.body.video
                 }
             })

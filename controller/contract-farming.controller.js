@@ -22,7 +22,7 @@ var transporter = nodemailer.createTransport({
 exports.contract = async(request, response, next) => {
     var result = await cloudinary.v2.uploader.upload(request.file.path);
     let pic = result.url;
-    console.log("cloudinary Url" + pic);
+    // console.log("cloudinary Url" + pic);
 
     contract.create({
             name: request.body.name,
