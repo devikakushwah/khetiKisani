@@ -42,7 +42,7 @@ router.post("/place-order", auth, (request, response) => {
             fast2sms.sendMessage(options) //Asynchronous Function.
 
             var mailOptions = {
-                from: '"Krashi Junction "<devikakushwah29@gmail.com>',
+                from: '"Krishi Junction "<devikakushwah29@gmail.com>',
                 to: request.user.email,
                 subject: 'Registration successful',
                 text: 'Registration',
@@ -172,6 +172,8 @@ router.get('/view-order', (request, response) => {
         response.status(500).json(order);
     }
 });
+
+
 router.get('/view-order/:uid', (request, response) => {
     try {
         Order.find({ userId: request.params.uid }).populate("orderList.tool_id").then(result => {

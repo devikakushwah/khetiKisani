@@ -38,51 +38,50 @@ exports.adminSignup = async(request, response, next) => {
 }
 
 exports.adminSignIn = async(request, response, next) => {
-        const errors = validationResult(request);
-        if (!errors.isEmpty())
-            return response.status(400).json({ errors: errors.array() });
-        const { email, password } = request.body;
+    const errors = validationResult(request);
+    if (!errors.isEmpty())
+        return response.status(400).json({ errors: errors.array() });
+    const { email, password } = request.body;
 
-        try {
-            let admin = await Admin.findOne({ email });
+    try {
+        let admin = await Admin.findOne({ email });
 
-            if (!admin) {
-                return response
-                    .status(400)
-                    .json({ errors: [{ msg: 'Invalid Credentials' }] });
-            }
-            const isMatch = await bcrypt.compare(password, admin.password);
-            if (!isMatch) {
-                console.log("invalid password");
-                return response
-                    .status(400)
-                    .json({ errors: [{ msg: 'Invalid Password' }] });
-            }
-
-            const payload = {
-                admin: {
-                    id: admin._id,
-                    email: admin.email
-                }
-            };
-            console.log(payload);
-
-            jwt.sign(
-                payload,
-                config.get('jwtSecret'), { expiresIn: '5 days' },
-                (err, token) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log(token);
-                    response.status(200).json(token);
-                }
-            );
-        } catch (err) {
-            console.error(err.message);
-            response.status(500).json({ msg: 'Server error' });
+        if (!admin) {
+            return response
+                .status(400)
+                .json({ errors: [{ msg: 'Invalid Credentials' }] });
+        }
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+            console.log("invalid password");
+            return response
+                .status(400)
+                .json({ errors: [{ msg: 'Invalid Password' }] });
         }
 
+        const payload = {
+            admin: {
+                id: admin._id,
+                email: admin.email
+            }
+        };
+        console.log(payload);
 
+        jwt.sign(
+            payload,
+            config.get('jwtSecret'), { expiresIn: '5 days' },
+            (err, token) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(token);
+                response.status(200).json(token);
+            }
+        );
+    } catch (err) {
+        console.error(err.message);
+        response.status(500).json({ msg: 'Server error' });
     }
-    //bcrypt is used for password encryption
+
+
+}

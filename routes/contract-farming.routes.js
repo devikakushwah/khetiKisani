@@ -3,7 +3,7 @@ const router = express.Router();
 const { body } = require('express-validator');
 const userController = require("../controller/contract-farming.controller");
 const multer = require('multer');
-const fireBase = require("../middleware/firebase");
+
 const contract = require('../model/contract_farming.model');
 
 var storage = multer.diskStorage({
@@ -16,18 +16,18 @@ var upload = multer({ storage: storage });
 
 
 
-router.get("/approve", (request, response) => {
-    contract.find({}, { isApproved: false }).then(result => {
-        console.log(result);
-        return response.status(200).json(result);
-    }).catch(err => {
-        console.log(err);
-        return response.status(500).json(err);
-    })
-});
+// router.get("/approve", (request, response) => {
+//     contract.find({}, { isApproved: false }).then(result => {
+//         console.log(result);
+//         return response.status(200).json(result);
+//     }).catch(err => {
+//         console.log(err);
+//         return response.status(500).json(err);
+//     })
+// });
 
 
-router.post("/contract-farming", upload.single('image'), fireBase.fireBaseStorage, userController.contract);
+router.post("/contract-farming", upload.single('image'), userController.contract);
 
 router.get("/view-requests", userController.viewList);
 

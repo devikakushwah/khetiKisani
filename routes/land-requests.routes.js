@@ -43,7 +43,7 @@ router.get("/booked-list", (request, response) => {
 })
 
 router.get("/book-list/:uid", (request, response) => {
-    requests.find().populate("contractId").then(result => {
+    requests.find({ _id: request.params.uid }).populate("contractId").then(result => {
         return response.status(200).json(result)
     }).catch(error => {
         return response.status(500).json(error)

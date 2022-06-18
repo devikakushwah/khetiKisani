@@ -12,7 +12,6 @@ require('dotenv').config();
 const { printLogger } = require('../core/utility');
 const { query } = require('express');
 const multer = require('multer');
-const fireBase = require("../middleware/firebase");
 const Service = require("../model/service.model");
 const Storage = require('../model/storage.model');
 var storage = multer.diskStorage({
@@ -34,9 +33,9 @@ var transporter = nodemailer.createTransport({
 const accountsid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountsid, authToken);
+
+
 router.post('/signup', async(request, response) => {
-
-
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
         console.log(errors);
@@ -205,6 +204,8 @@ router.get('/view/:id', (request, response) => {
         return response.status(500).json(err);
     })
 })
+
+
 router.get("/view", (request, response) => {
     User.find().then(result => {
         console.log(result);
@@ -214,6 +215,8 @@ router.get("/view", (request, response) => {
         return response.status(500).json(err);
     })
 });
+
+
 router.post('/edit-profile/:id', async(request, response) => {
 
     const { name, email, address, mobile } = request.body;

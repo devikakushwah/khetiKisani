@@ -1,42 +1,50 @@
 const router = require('express').Router();
 const multer = require('multer');
 const fireBase = require("../middleware/firebase");
+const cloudinary = require('cloudinary');
 var storage = multer.diskStorage({
     destination: 'public/images',
     filename: function(req, file, cb) {
         cb(null, Date.now() + "-" + file.originalname);
     }
 });
+
+cloudinary.config({
+    cloud_name: "divfjsxkj",
+    api_key: "519969236375722",
+    api_secret: "GqRAukfL0NlrKKrsyA0prw_9wKM",
+})
+
 var upload = multer({ storage: storage });
 
 const Storage = require('../model/storage.model');
 
+router.post("/add", upload.single('image'), async(request, response) => {
+    var result = await cloudinary.v2.uploader.upload(request.file.path);
+    let pic = result.url;
+    console.log("cloudinary Url" + pic);
 
-router.post("/add", upload.single('image'),
-    fireBase.fireBaseStorage,
-    (request, response) => {
+    console.log(request.body);
+    console.log(request.file);
+    Storage.create({
+            storageId: request.body.storageId,
+            name: request.body.name,
+            capacity: request.body.capacity,
+            location: request.body.location,
+            video: request.body.video,
+            storage_description: request.body.storage_description,
+            images: pic,
+            duration: request.body.duration,
+        })
+        .then(result => {
+            console.log(result);
+            return response.status(200).json(result);
+        }).catch(err => {
+            console.log(err);
+            return response.status(500).json({ err: "server err.." })
+        });
+});
 
-        console.log(request.body);
-        console.log(request.file);
-        Storage.create({
-                storageId: request.body.storageId,
-                name: request.body.name,
-                capacity: request.body.capacity,
-                location: request.body.location,
-                video: request.body.video,
-                storage_description: request.body.storage_description,
-                images: "https://firebasestorage.googleapis.com/v0/b/krishi-sakha-f07d5.appspot.com/o/" + request.file.filename + "?alt=media&token=abcddcba",
-
-                duration: request.body.duration,
-            })
-            .then(result => {
-                console.log(result);
-                return response.status(200).json(result);
-            }).catch(err => {
-                console.log(err);
-                return response.status(500).json({ err: "server err.." })
-            });
-    });
 // router.post("/add-items", async(request, response) => {
 //     const item = {
 //         name: request.body.name,
