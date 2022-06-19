@@ -73,28 +73,6 @@ router.post("/update", upload.single('image'), async(request, response) => {
 });
 
 
-// router.post("/add-items", async(request, response) => {
-//     const item = {
-//         name: request.body.name,
-//         charges: request.body.charges,
-//         description: request.body.description,
-//         temperature: request.body.temperature,
-//         weight: request.body.weight,
-//         bookingDate: request.body.bookingDate,
-//         durationNo: request.body.durationNo,
-//         durationDay: request.body.durationDay
-//     }
-//     let storage = await Storage.findOne({ _id: request.body.sid });
-//     console.log(storage);
-//     storage.items.push(item);
-//     storage.save().then(result => {
-//         return response.status(200).json(result)
-//     }).catch(
-//         err => {
-//             return response.status(500).json(err);
-//         })
-// })
-
 
 router.post("/add-items", async(request, response) => {
     const item = {

@@ -21,6 +21,7 @@ var transporter = nodemailer.createTransport({
 
 
 router.post("/place-order", auth, (request, response) => {
+    console.log("place=order");
     const { userId, total, address, mobile, shipping, payment, duration } = request.body;
     const orderItem = { userId, total, address, mobile, shipping, payment, duration }
     var order = new Order(orderItem);
@@ -31,37 +32,39 @@ router.post("/place-order", auth, (request, response) => {
     }
     order.save()
         .then(result => {
-            console.log("order" + result);
+            console.log("order");
 
-            var options = {
-                authorization: "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19",
-                message: ' Welcome to krishi junction! You have successfully placed order',
-                numbers: [result.mobile]
-            }
-            console.log(options);
-            fast2sms.sendMessage(options) //Asynchronous Function.
+            // var options = {
+            //     authorization: "jbKmfDycSI0QUAankG5pruwXetOsiYPVJvE1zCx7d6oLg2NZFMthPWGFymDc0uKIzTVZ5482EsaQvi19",
+            //     message: ' Welcome to krishi junction! You have successfully placed order',
+            //     numbers: [result.mobile]
+            // }
+            // console.log(options);
+            // fast2sms.sendMessage(options) //Asynchronous Function.
 
-            var mailOptions = {
-                from: '"Krishi Junction "<devikakushwah29@gmail.com>',
-                to: request.user.email,
-                subject: 'Registration successful',
-                text: 'Registration',
-                html: '<b>Welcome !' + ' to become member of <h3>Krishi Junction</h3></b>'
-            };
+            // var mailOptions = {
+            //     from: '"Krishi Junction "<devikakushwah29@gmail.com>',
+            //     to: request.user.email,
+            //     subject: 'Registration successful',
+            //     text: 'Registration',
+            //     html: '<b>Welcome !' + ' to become member of <h3>Krishi Junction</h3></b>'
+            // };
 
-            transporter.sendMail(mailOptions, function(error, info) {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log('Email sent: ' + info.response);
-                    printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'signup');
-                    console.log("send sms and otp");
-                    console.log(result);
-                    return response.status(200).json({ msg: 'Welcome' + ' ' + result.name });
+            // transporter.sendMail(mailOptions, function(error, info) {
+            //     if (error) {
+            //         console.log(error);
+            //     } else {
+            //         console.log('Email sent: ' + info.response);
+            //         printLogger(2, `*********** send mail *************${JSON.stringify(result)}`, 'signup');
+            //         console.log("send sms and otp");
+            //         console.log(result);
+            //         return response.status(200).json({ msg: 'Welcome' + ' ' + result.name });
 
-                }
+            //     }
 
-            })
+            // })
+            return response.status(200).json({ msg: 'Welcome' + ' ' + result });
+
         }).catch(err => {
             console.log(err);
 
@@ -74,7 +77,7 @@ router.post("/pay", (req, res) => {
         let reqBody = req.body;
         printLogger(2, `*********** payment *************${JSON.stringify(reqBody)}`, 'order');
         instance.orders.create({
-            amount: request.body.amount,
+            amount: 1,
             currency: "INR"
         }, (err, order) => {
             if (err) {
@@ -115,7 +118,8 @@ router.post("/pay", (req, res) => {
 
 
 router.post('/payment-status', (req, res) => {
-    console.log("payment -status" + req.body.razorpay_payment_id);
+    console.log(req.body.res.razorpay_payment_id);
+    console.log("payment -status" + req.body.res.razorpay_payment_id);
     try {
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
