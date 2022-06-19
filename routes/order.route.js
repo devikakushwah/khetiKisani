@@ -63,7 +63,7 @@ router.post("/place-order", auth, (request, response) => {
             //     }
 
             // })
-            return response.status(200).json({ msg: 'Welcome' + ' ' + result});
+            return response.status(200).json({ msg: 'Welcome' + ' ' + result });
 
         }).catch(err => {
             console.log(err);
@@ -118,7 +118,8 @@ router.post("/pay", (req, res) => {
 
 
 router.post('/payment-status', (req, res) => {
-    console.log("payment -status" + req.body.razorpay_payment_id);
+    console.log(req.body.res.razorpay_payment_id);
+    console.log("payment -status" + req.body.res.razorpay_payment_id);
     try {
         instance.payments.fetch(req.body.razorpay_payment_id).then((result) => {
             console.log(result);
